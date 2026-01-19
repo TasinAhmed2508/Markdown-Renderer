@@ -1,0 +1,240 @@
+/* ============================================
+   COMPLETE LIGHT MODE THEME
+   All components switch to light theme
+   ============================================ */
+
+/* CSS Variables for Light Mode */
+[data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --border-color: rgba(0, 0, 0, 0.12);
+    --shadow-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Body & Background */
+[data-theme="light"] body {
+    background-color: #e8ecf0;
+    color: #1e293b;
+}
+
+/* Shader Background - lighter, more subtle */
+[data-theme="light"] #canvas-container {
+    opacity: 0.15;
+    filter: saturate(0.6) brightness(1.2);
+}
+
+/* ============================================
+   NAVBAR - Full Light Mode
+   ============================================ */
+[data-theme="light"] #navbar {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(12px);
+}
+
+[data-theme="light"] #navbar .text-white {
+    color: #1e293b !important;
+}
+
+[data-theme="light"] #navbar svg {
+    color: #475569;
+}
+
+/* Metal Buttons in Navbar */
+[data-theme="light"] .metal-btn {
+    background: linear-gradient(to bottom, #ffffff, #f1f5f9) !important;
+    color: #334155 !important;
+    border-color: #d1d5db !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .metal-btn:hover {
+    background: linear-gradient(to bottom, #f8fafc, #e2e8f0) !important;
+    color: #1e293b !important;
+}
+
+/* ============================================
+   GLASS PANES - Both Editor & Preview
+   ============================================ */
+[data-theme="light"] .glass-pane {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* Window Chrome Header */
+[data-theme="light"] .window-chrome {
+    background: rgba(248, 250, 252, 0.98) !important;
+}
+
+[data-theme="light"] .window-chrome .text-xs {
+    color: #64748b !important;
+}
+
+/* ============================================
+   EDITOR PANE - Text Area & Line Numbers
+   ============================================ */
+[data-theme="light"] #markdown-input {
+    color: #1e293b !important;
+    background: transparent !important;
+    caret-color: #3b82f6;
+}
+
+[data-theme="light"] #markdown-input::placeholder {
+    color: #94a3b8;
+}
+
+/* Line Numbers */
+[data-theme="light"] #line-numbers {
+    color: #94a3b8 !important;
+    background: transparent !important;
+    border-right-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Editor Toolbar */
+[data-theme="light"] .editor-toolbar {
+    background: rgba(248, 250, 252, 0.95);
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .editor-toolbar button {
+    color: #475569;
+}
+
+[data-theme="light"] .editor-toolbar button:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: #4f46e5;
+}
+
+/* ============================================
+   PREVIEW PANE - Canvas
+   ============================================ */
+[data-theme="light"] #canvas {
+    color: #1e293b !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+}
+
+/* ============================================
+   STATUS BAR
+   ============================================ */
+[data-theme="light"] .flex.items-center.gap-4.text-xs {
+    color: #64748b !important;
+}
+
+[data-theme="light"] [id*="word-count"],
+[data-theme="light"] [id*="read-time"] {
+    color: #64748b !important;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+[data-theme="light"] .markdown-body table {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .markdown-body thead {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+}
+
+[data-theme="light"] .markdown-body th {
+    color: #334155;
+    border-color: #e2e8f0;
+}
+
+[data-theme="light"] .markdown-body td {
+    color: #475569;
+    border-color: #f1f5f9;
+}
+
+[data-theme="light"] .markdown-body tbody tr:hover {
+    background: rgba(99, 102, 241, 0.04);
+}
+
+/* ============================================
+   CODE BLOCKS
+   ============================================ */
+[data-theme="light"] pre {
+    background: #f6f8fa !important;
+    border: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] code {
+    background: #f1f5f9 !important;
+    color: #be185d !important;
+}
+
+[data-theme="light"] pre code {
+    color: #24292f !important;
+}
+
+/* ============================================
+   MERMAID DIAGRAMS
+   ============================================ */
+[data-theme="light"] .mermaid {
+    background: linear-gradient(135deg, #ffffff, #f8fafc) !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================
+   BLOCKQUOTES
+   ============================================ */
+[data-theme="light"] blockquote {
+    background: rgba(99, 102, 241, 0.05);
+    border-left-color: #6366f1;
+    color: #475569;
+}
+
+/* ============================================
+   SCROLLBARS
+   ============================================ */
+[data-theme="light"] ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* ============================================
+   THEME SWATCHES
+   ============================================ */
+[data-theme="light"] .swatch {
+    border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] .swatch.active {
+    border-color: #3b82f6 !important;
+}
+
+/* ============================================
+   EXPORT/DROPDOWN MENUS
+   ============================================ */
+[data-theme="light"] #export-menu,
+[data-theme="light"] .dropdown-menu {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] #export-menu button,
+[data-theme="light"] .dropdown-menu button {
+    color: #334155;
+}
+
+[data-theme="light"] #export-menu button:hover,
+[data-theme="light"] .dropdown-menu button:hover {
+    background: #f1f5f9;
+}

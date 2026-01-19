@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TA RenderX</title>
+
+    <!-- 1. Design System: Tailwind + AnoAI Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- 2. Logic Dependencies (Markdown, Math, Diagrams) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/lib/marked.umd.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- Extra languages for highlight.js (100+ supported) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/rust.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/scala.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/haskell.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/elixir.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/clojure.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/r.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/julia.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/matlab.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/nginx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vim.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://unpkg.com/prettier@3.0.3/standalone.js"></script>
+    <script src="https://unpkg.com/prettier@3.0.3/plugins/markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- PlantUML encoder -->
+    <script src="https://cdn.jsdelivr.net/npm/plantuml-encoder@1.4.0/dist/plantuml-encoder.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- 3. Base Styles -->
+    <link rel="stylesheet" href="css/base/variables.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <link rel="stylesheet" href="css/base/scrollbar.css">
+
+    <!-- 4. Layout -->
+    <link rel="stylesheet" href="css/layout/layout.css">
+
+    <!-- 5. Components -->
+    <link rel="stylesheet" href="css/components/navbar.css">
+    <link rel="stylesheet" href="css/components/buttons.css">
+    <link rel="stylesheet" href="css/components/glass-pane.css">
+    <link rel="stylesheet" href="css/components/editor.css">
+    <link rel="stylesheet" href="css/components/editor-toolbar.css">
+    <link rel="stylesheet" href="css/components/linenumbers.css">
+    <link rel="stylesheet" href="css/components/loader.css">
+    <link rel="stylesheet" href="css/components/embeds.css">
+    <link rel="stylesheet" href="css/components/swatches.css">
+    <link rel="stylesheet" href="css/components/controls.css">
+    <link rel="stylesheet" href="css/components/math.css">
+    <link rel="stylesheet" href="css/components/tables.css">
+    <link rel="stylesheet" href="css/components/diagrams.css">
+    <link rel="stylesheet" href="css/components/code-blocks.css">
+
+    <!-- 6. Themes -->
+    <link rel="stylesheet" href="css/themes/light.css">
+
+    <!-- 7. Responsive -->
+    <link rel="stylesheet" href="css/responsive/mobile.css">
+
+    <!-- 8. Print -->
+    <link rel="stylesheet" href="css/print/pdf-styles.css">
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div id="canvas-container"></div>
+
+    <!-- SVG Filter for Liquid Effect -->
+    <svg class="hidden" width="0" height="0">
+        <defs>
+            <filter id="container-glass">
+                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="1" result="turbulence" />
+                <feGaussianBlur in="turbulence" stdDeviation="2" result="blurredNoise" />
+                <feDisplacementMap in="SourceGraphic" in2="blurredNoise" scale="70" xChannelSelector="R"
+                    yChannelSelector="B" result="displaced" />
+                <feComposite operator="over" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Header / Toolbar -->
+    <nav id="navbar" class="flex items-center justify-between px-6">
+        <a href="#" class="flex items-center gap-2 text-white font-bold text-xl tracking-tight group">
+            <div class="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:bg-white/10 transition-colors">
+                <i data-lucide="rocket" class="w-5 h-5 text-indigo-400"></i>
+            </div>
+            <span class="hidden md:inline font-mono tracking-wider">TA RenderX</span>
+        </a>
+
+        <!-- Toolbar Actions -->
+        <div class="flex items-center gap-2 md:gap-4" id="app-toolbar">
+            <!-- Format Button (Liquid) -->
+            <button id="btn-format"
+                class="relative hidden md:inline-flex items-center justify-center gap-2 px-6 py-2 rounded-full text-sm font-medium text-white transition-transform active:scale-95 group">
+                <div
+                    class="absolute inset-0 bg-teal-600 rounded-full blur opacity-40 group-hover:opacity-60 transition-opacity">
+                </div>
+                <div
+                    class="relative bg-teal-500/20 border border-teal-400/30 rounded-full px-6 py-2 flex items-center gap-2 backdrop-blur-md">
+                    <i data-lucide="wand-2" class="w-4 h-4"></i> Format
+                </div>
+            </button>
+
+            <!-- Copy HTML Button (Liquid) -->
+            <button id="btn-copy"
+                class="relative hidden md:inline-flex items-center justify-center gap-2 px-6 py-2 rounded-full text-sm font-medium text-white transition-transform active:scale-95 group">
+                <div
+                    class="absolute inset-0 bg-violet-600 rounded-full blur opacity-40 group-hover:opacity-60 transition-opacity">
+                </div>
+                <div
+                    class="relative bg-violet-500/20 border border-violet-400/30 rounded-full px-6 py-2 flex items-center gap-2 backdrop-blur-md">
+                    <i data-lucide="copy" class="w-4 h-4"></i> Copy HTML
+                </div>
+            </button>
+
+            <!-- Export Button Group -->
+            <div class="relative group/export" id="export-container">
+                <!-- Main Button -->
+                <button id="btn-export-trigger"
+                    class="relative inline-flex items-center justify-center gap-2 px-6 py-2 rounded-full text-sm font-medium text-white transition-transform active:scale-95">
+                    <div
+                        class="absolute inset-0 bg-indigo-600 rounded-full blur opacity-40 group-hover/export:opacity-60 transition-opacity">
+                    </div>
+                    <div
+                        class="relative bg-indigo-500/20 border border-indigo-400/30 rounded-full px-6 py-2 flex items-center gap-2 backdrop-blur-md">
+                        <i data-lucide="share" class="w-4 h-4"></i> Export
+                    </div>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div id="export-menu"
+                    class="absolute top-full right-0 mt-2 w-48 bg-[#0d1117] border border-white/10 rounded-xl shadow-2xl backdrop-blur-xl overflow-hidden transition-all opacity-0 invisible scale-95 origin-top-right z-50">
+                    <button id="btn-export-png"
+                        class="w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 flex items-center gap-3 transition-colors">
+                        <i data-lucide="image" class="w-4 h-4 text-indigo-400"></i>
+                        <span>Image (.png)</span>
+                    </button>
+                    <div class="h-px bg-white/5 w-full"></div>
+                    <button id="btn-export-html"
+                        class="w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 flex items-center gap-3 transition-colors">
+                        <i data-lucide="file-code" class="w-4 h-4 text-emerald-400"></i>
+                        <span>HTML (Light)</span>
+                    </button>
+                    <div class="h-px bg-white/5 w-full"></div>
+                    <button id="btn-export-pdf"
+                        class="w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 flex items-center gap-3 transition-colors">
+                        <i data-lucide="file-text" class="w-4 h-4 text-rose-400"></i>
+                        <span>PDF Document</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Theme Toggle Button -->
+            <button id="btn-theme-toggle"
+                class="relative inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-white transition-transform active:scale-95 group"
+                title="Toggle Dark/Light Mode">
+                <div
+                    class="absolute inset-0 bg-amber-500 rounded-full blur opacity-40 group-hover:opacity-60 transition-opacity">
+                </div>
+                <div
+                    class="relative bg-amber-500/20 border border-amber-400/30 rounded-full px-4 py-2 flex items-center gap-2 backdrop-blur-md">
+                    <i data-lucide="sun" class="w-4 h-4 theme-icon-light hidden"></i>
+                    <i data-lucide="moon" class="w-4 h-4 theme-icon-dark"></i>
+                </div>
+            </button>
+
+            <!-- Save MD (Metal) -->
+            <button id="btn-download-md"
+                class="metal-btn px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                <i data-lucide="download" class="w-4 h-4"></i> Save
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main App Grid -->
+    <main class="app-grid relative z-10">
+
+        <!-- Editor Pane -->
+        <div class="glass-pane border-t border-white/5 transition-all hover:border-white/10 group/editor">
+            <!-- Editor Toolbar -->
+            <div class="flex items-center gap-2 p-3 border-b border-white/5 bg-black/20 backdrop-blur-xl"
+                id="editor-toolbar">
+                <div class="flex items-center bg-white/5 rounded-lg p-1">
+                    <button
+                        class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white tool-btn transition-colors"
+                        data-tool="bold" title="Bold"><i class="fas fa-bold"></i></button>
+                    <button
+                        class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white tool-btn transition-colors"
+                        data-tool="italic" title="Italic"><i class="fas fa-italic"></i></button>
+                    <button
+                        class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white tool-btn transition-colors"
+                        data-tool="code" title="Code"><i class="fas fa-code"></i></button>
+                </div>
+
+                <div class="w-px h-6 bg-white/10 mx-1"></div>
+
+                <div class="flex items-center bg-white/5 rounded-lg p-1">
+                    <button class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                        id="btn-find-toggle" title="Search"><i class="fas fa-search"></i></button>
+                    <button class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                        id="btn-typewriter" title="Typewriter Mode"><i class="fas fa-align-center"></i></button>
+                </div>
+            </div>
+
+            <!-- Editor Area -->
+            <div class="relative flex-1 overflow-hidden flex">
+                <div id="line-numbers"
+                    class="hidden md:block w-12 bg-black/20 border-r border-white/5 text-right p-4 text-gray-500 font-mono text-xs pt-6 select-none">
+                </div>
+                <textarea id="markdown-input"
+                    class="flex-1 p-6 bg-transparent text-gray-200 font-mono text-sm resize-none focus:outline-none selection:bg-indigo-500/30 placeholder-gray-600"
+                    spellcheck="false"></textarea>
+            </div>
+        </div>
+
+        <!-- Preview Pane -->
+        <div class="glass-pane relative overflow-hidden">
+            <div id="preview-loader" class="loader">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Canvas: Container for padding and the window chrome -->
+            <div id="canvas" class="h-full w-full overflow-y-auto p-10 flex flex-col items-center scroll-auto">
+
+                <!-- Window Chrome -->
+                <div id="window-chrome"
+                    class="w-full max-w-4xl bg-[#0d1117]/80 backdrop-blur-2xl rounded-xl border border-white/10 shadow-2xl flex flex-col">
+                    <!-- Window Header -->
+                    <div
+                        class="flex items-center justify-between px-5 py-4 border-b border-white/5 bg-white/5 shrink-0">
+                        <div class="flex gap-2">
+                            <div class="w-3 h-3 rounded-full bg-[#ff5f57] shadow-sm"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#febc2e] shadow-sm"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#28c840] shadow-sm"></div>
+                        </div>
+                        <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-[0.2em] font-mono">Render
+                            Preview</div>
+                        <div class="w-12"></div> <!-- Spacer -->
+                    </div>
+
+                    <!-- Content -->
+                    <div id="markdown-output" class="markdown-body !bg-transparent !p-10 !h-auto"></div>
+                </div>
+            </div>
+
+            <!-- Hidden DOM elements required by JS logic -->
+            <div id="theme-swatches" style="display:none;"></div>
+        </div>
+
+    </main>
+
+    <!-- Status Bar (Liquid Glass) -->
+    <footer class="fixed bottom-6 right-8 z-50">
+        <div class="relative inline-flex items-center justify-center gap-4 h-10 px-6 rounded-full group cursor-default">
+            <!-- Liquid Background Layers -->
+            <div
+                class="absolute top-0 left-0 z-0 h-full w-full rounded-full liquid-shadow opacity-80 group-hover:opacity-100 transition-opacity">
+            </div>
+            <div
+                class="absolute top-0 left-0 isolate -z-10 h-full w-full overflow-hidden rounded-full liquid-glass opacity-90">
+            </div>
+
+            <!-- Content -->
+            <span
+                class="pointer-events-none z-10 flex items-center gap-3 text-xs font-medium text-white/80 tracking-wide">
+                <span id="word-count" class="flex items-center gap-1.5"><i data-lucide="type"
+                        class="w-3 h-3 text-indigo-300"></i> 0 Words</span>
+                <span class="w-px h-3 bg-white/20"></span>
+                <span id="read-time" class="flex items-center gap-1.5"><i data-lucide="clock"
+                        class="w-3 h-3 text-teal-300"></i> 0 min</span>
+            </span>
+
+            <div class="w-px h-4 bg-white/20 mx-1 z-10"></div>
+
+            <!-- Padding Control -->
+            <div class="z-10 flex items-center gap-2 pointer-events-auto">
+                <i data-lucide="maximize" class="w-3 h-3 text-white/60"></i>
+                <input type="range" id="padding-slider" min="0" max="100" value="20"
+                    class="w-16 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer hover:bg-white/30 transition-colors accent-indigo-500">
+            </div>
+        </div>
+    </footer>
+
+    <!-- Three.js Shader Background Logic -->
+    <script>
+        // Init Icons
+        lucide.createIcons();
+
+        // Navbar Scroll Logic
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            // Only float if body is scrollable (mobile), otherwise always float or fixed
+            if (window.scrollY > 20) navbar.classList.add('is-floating');
+            else navbar.classList.remove('is-floating');
+        });
+
+        // Initialize Shader (Inline for simplicity or load via module)
+        window.onload = function () {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: { iTime: { value: 0 }, iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) } },
+                vertexShader: `void main() { gl_Position = vec4(position, 1.0); }`,
+                fragmentShader: `
+                    uniform float iTime;
+                    uniform vec2 iResolution;
+
+                    #define NUM_OCTAVES 3
+
+                    float rand(vec2 n) {
+                        return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+                    }
+
+                    float noise(vec2 p) {
+                        vec2 ip = floor(p);
+                        vec2 u = fract(p);
+                        u = u*u*(3.0-2.0*u);
+
+                        float res = mix(
+                            mix(rand(ip), rand(ip + vec2(1.0, 0.0)), u.x),
+                            mix(rand(ip + vec2(0.0, 1.0)), rand(ip + vec2(1.0, 1.0)), u.x), u.y);
+                        return res * res;
+                    }
+
+                    float fbm(vec2 x) {
+                        float v = 0.0;
+                        float a = 0.3;
+                        vec2 shift = vec2(100);
+                        mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
+                        for (int i = 0; i < NUM_OCTAVES; ++i) {
+                            v += a * noise(x);
+                            x = rot * x * 2.0 + shift;
+                            a *= 0.4;
+                        }
+                        return v;
+                    }
+
+                    void main() {
+                        vec2 shake = vec2(sin(iTime * 1.2) * 0.005, cos(iTime * 2.1) * 0.005);
+                        vec2 p = ((gl_FragCoord.xy + shake * iResolution.xy) - iResolution.xy * 0.5) / iResolution.y * mat2(6.0, -4.0, 4.0, 6.0);
+                        vec2 v;
+                        vec4 o = vec4(0.0);
+
+                        float f = 2.0 + fbm(p + vec2(iTime * 5.0, 0.0)) * 0.5;
+
+                        for (float i = 0.0; i < 35.0; i++) {
+                            v = p + cos(i * i + (iTime + p.x * 0.08) * 0.025 + i * vec2(13.0, 11.0)) * 3.5 + vec2(sin(iTime * 3.0 + i) * 0.003, cos(iTime * 3.5 - i) * 0.003);
+                            float tailNoise = fbm(v + vec2(iTime * 0.5, i)) * 0.3 * (1.0 - (i / 35.0));
+                            vec4 auroraColors = vec4(
+                                0.1 + 0.3 * sin(i * 0.2 + iTime * 0.4),
+                                0.3 + 0.5 * cos(i * 0.3 + iTime * 0.5),
+                                0.7 + 0.3 * sin(i * 0.4 + iTime * 0.3),
+                                1.0
+                            );
+                            vec4 currentContribution = auroraColors * exp(sin(i * i + iTime * 0.8)) / length(max(v, vec2(v.x * f * 0.015, v.y * 1.5)));
+                            float thinnessFactor = smoothstep(0.0, 1.0, i / 35.0) * 0.6;
+                            o += currentContribution * (1.0 + tailNoise * 0.8) * thinnessFactor;
+                        }
+
+                        o = tanh(pow(o / 100.0, vec4(1.6)));
+                        gl_FragColor = o * 1.5;
+                    }
+                `
+            });
+            scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
+
+            function animate() {
+                material.uniforms.iTime.value += 0.01;
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                material.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
+            });
+        };
+    </script>
+
+    <!-- Load Main Logic -->
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+/* Mermaid Diagram Styling */
+
+.mermaid {
+    background: linear-gradient(135deg, rgba(13, 17, 23, 0.9), rgba(22, 27, 34, 0.9));
+    border-radius: 12px;
+    padding: 24px;
+    margin: 1.5em 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    overflow-x: auto;
+}
+
+.mermaid svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+}
+
+.mermaid .node rect,
+.mermaid .node circle,
+.mermaid .node ellipse,
+.mermaid .node polygon {
+    stroke-width: 2px;
+}
+
+.mermaid .flowchart-link {
+    stroke-width: 2px;
+}
+
+.mermaid .nodeLabel {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+}
+
+.mermaid .edgeLabel {
+    background-color: rgba(13, 17, 23, 0.95);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.mermaid .actor {
+    stroke-width: 2px;
+}
+
+.mermaid .messageText {
+    font-size: 13px;
+}
+
+.mermaid-error-msg {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px dashed rgba(239, 68, 68, 0.5);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.mermaid:empty::before {
+    content: 'Loading diagram...';
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+}
+
+.mermaid+em {
+    display: block;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85em;
+    margin-top: -0.5em;
+    margin-bottom: 1em;
+}
+
+/* Light Mode */
+[data-theme="light"] .mermaid {
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    border-color: #e2e8f0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .mermaid .edgeLabel {
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="light"] .mermaid:empty::before {
+    color: #94a3b8;
+}
+
+[data-theme="light"] .mermaid+em {
+    color: #64748b;
+}

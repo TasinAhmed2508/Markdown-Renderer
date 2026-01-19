@@ -1,0 +1,63 @@
+/* Math and Typography Styling for KaTeX */
+
+/* Display math blocks - centered with proper spacing */
+.math-display {
+    display: block;
+    width: 100%;
+    margin: 1.2em 0;
+    text-align: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* KaTeX display mode styling */
+.math-display .katex-display {
+    margin: 0;
+    padding: 0;
+}
+
+/* Inline math - ensure proper vertical alignment */
+.katex {
+    font-size: 1.1em;
+}
+
+/* Ensure equations don't overflow on mobile */
+.katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.5em 0;
+}
+
+/* Better line height for text with inline math */
+.markdown-body p,
+.markdown-body li {
+    line-height: 1.8;
+}
+
+/* Improve spacing around equations in lists */
+.markdown-body li .math-display {
+    margin: 0.8em 0;
+}
+
+/* Horizontal rule styling for better section separation */
+.markdown-body hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+    margin: 2em 0;
+}
+
+/* Code block improvements */
+.markdown-body pre {
+    border-radius: 8px;
+    margin: 1em 0;
+}
+
+/* Blockquote styling */
+.markdown-body blockquote {
+    border-left: 3px solid rgba(99, 102, 241, 0.5);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 0 8px 8px 0;
+}

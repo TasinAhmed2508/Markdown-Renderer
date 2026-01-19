@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Renderer</title>
+    <!-- Foundation Styles (Core Design System) -->
+    <link rel="stylesheet" href="css/base/foundation.css">
+    
+    <!-- Component Styles (Specific Features) -->
+    <link rel="stylesheet" href="css/components/editor.css">
+    <link rel="stylesheet" href="css/components/button.css">
+    <link rel="stylesheet" href="css/components/swatches.css">
+    <link rel="stylesheet" href="css/components/controls.css">
+    <link rel="stylesheet" href="css/components/editor-toolbar.css">
+    <link rel="stylesheet" href="css/components/embeds.css">
+    <link rel="stylesheet" href="css/components/linenumbers.css">
+    <link rel="stylesheet" href="css/components/loader.css">
+    
+    <!-- Responsive -->
+    <link rel="stylesheet" href="css/responsive/mobile.css">
+    
+    <!-- CSS Themes (Variables only) -->
+    <link rel="stylesheet" href="css/themes/default.css">
+    <link rel="stylesheet" href="css/themes/dark.css">
+</head>
+<body>
+    <div class="shader-bg"><canvas id="shader-canvas"></canvas></div>
+    
+    <div class="app" data-theme="dark">
+        <header class="glass-panel glass-panel--nav">
+            <div class="toolbar-group">
+                <button id="btn-export" class="btn btn-primary">Export Image</button>
+                <button id="btn-format" class="btn">Format</button>
+                <button id="btn-download-md" class="btn">Save MD</button>
+                <button id="btn-copy" class="btn">Copy HTML</button>
+            </div>
+            <div class="toolbar-group">
+                <label>Canvas Padding</label>
+                <input type="range" id="padding-slider" min="0" max="150" value="60">
+            </div>
+            <div class="toolbar-group swatches" id="theme-swatches">
+                <!-- Swatches will be injected here -->
+            </div>
+        </header>
+
+        <main class="glass-panel glass-panel--content app-content">
+            <section class="editor-pane">
+                <div id="editor-toolbar" class="editor-toolbar">
+                    <button class="tool-btn" data-tool="bold" title="Bold"><i class="fas fa-bold"></i></button>
+                    <button class="tool-btn" data-tool="italic" title="Italic"><i class="fas fa-italic"></i></button>
+                    <button class="tool-btn" data-tool="code" title="Code"><i class="fas fa-code"></i></button>
+                    <button class="tool-btn" data-tool="link" title="Link"><i class="fas fa-link"></i></button>
+                    <button class="tool-btn" data-tool="list-ul" title="Unordered List"><i class="fas fa-list-ul"></i></button>
+                    <button class="tool-btn" data-tool="list-ol" title="Ordered List"><i class="fas fa-list-ol"></i></button>
+                    <div class="tool-separator"></div>
+                    <button class="tool-btn" id="btn-find-toggle" title="Find & Replace"><i class="fas fa-search"></i></button>
+                    <button class="tool-btn" id="btn-typewriter" title="Typewriter Mode"><i class="fas fa-align-center"></i></button>
+                </div>
+                <div id="find-replace-bar" class="find-replace-bar hidden">
+                    <input type="text" id="find-input" placeholder="Find...">
+                    <input type="text" id="replace-input" placeholder="Replace...">
+                    <button id="btn-find-next" title="Next"><i class="fas fa-chevron-down"></i></button>
+                    <button id="btn-replace" title="Replace">Replace</button>
+                    <button id="btn-replace-all" title="Replace All">All</button>
+                    <button id="btn-find-close" title="Close"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="editor-wrapper">
+                    <div id="line-numbers" class="line-numbers"></div>
+                    <textarea id="markdown-input" placeholder="Enter markdown here..."></textarea>
+                </div>
+            </section>
+            
+            <section class="preview-pane">
+                <div id="preview-loader" class="loader">
+                    <div class="spinner"></div>
+                </div>
+                <div id="canvas" class="canvas">
+                    <div id="window-chrome" class="window-chrome">
+                        <div class="window-header">
+                            <div class="window-controls">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                            </div>
+                            <div class="window-title">markdown.md</div>
+                        </div>
+                        <div id="markdown-output" class="markdown-body"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="glass-panel glass-panel--nav status-bar" id="status-bar" style="height: 40px; margin: 0 24px 24px 24px; padding: 0 24px;">
+            <div class="status-item" id="word-count">0 Words</div>
+            <div class="status-item" id="char-count">0 Characters</div>
+            <div class="status-item" id="read-time">0 min read</div>
+        </footer>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

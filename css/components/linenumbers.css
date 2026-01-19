@@ -1,0 +1,49 @@
+.editor-wrapper {
+    position: relative;
+    height: calc(100% - 40px);
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+}
+
+.line-numbers {
+    width: 40px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.3);
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    font-size: 15px;
+    line-height: 1.7;
+    text-align: right;
+    padding: 24px 8px 24px 0;
+    overflow: hidden;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+#markdown-input {
+    flex: 1;
+    height: 100%;
+    border: none;
+    resize: none;
+    outline: none;
+    font-size: 15px;
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    line-height: 1.7;
+    background: transparent;
+    color: #fff;
+    padding: 24px;
+    overflow-y: scroll;
+}
+
+/* Light Mode */
+[data-theme="light"] .line-numbers {
+    background: rgba(0, 0, 0, 0.03);
+    border-right-color: rgba(0, 0, 0, 0.08);
+    color: #94a3b8;
+}
+
+[data-theme="light"] #markdown-input {
+    color: #1e293b;
+}

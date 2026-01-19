@@ -1,0 +1,145 @@
+.editor-toolbar {
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 4px;
+    backdrop-filter: blur(5px);
+}
+
+.tool-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.tool-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.tool-btn.active {
+    background: rgba(0, 113, 227, 0.5);
+    color: #fff;
+}
+
+.tool-separator {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 6px;
+}
+
+.find-replace-bar {
+    height: 40px;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideDown 0.2s ease-out;
+}
+
+.find-replace-bar.hidden {
+    display: none;
+}
+
+.find-replace-bar input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    outline: none;
+    width: 120px;
+}
+
+.find-replace-bar input:focus {
+    border-color: #0071e3;
+}
+
+.find-replace-bar button {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.find-replace-bar button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes slideDown {
+    from {
+        height: 0;
+        opacity: 0;
+    }
+
+    to {
+        height: 40px;
+        opacity: 1;
+    }
+}
+
+/* Light Mode */
+[data-theme="light"] .editor-toolbar {
+    background: rgba(248, 250, 252, 0.95);
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .tool-btn {
+    color: #64748b;
+}
+
+[data-theme="light"] .tool-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #1e293b;
+}
+
+[data-theme="light"] .tool-btn.active {
+    background: rgba(99, 102, 241, 0.15);
+    color: #4f46e5;
+}
+
+[data-theme="light"] .tool-separator {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .find-replace-bar {
+    background: rgba(248, 250, 252, 0.98);
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .find-replace-bar input {
+    background: #ffffff;
+    border-color: #d1d5db;
+    color: #1e293b;
+}
+
+[data-theme="light"] .find-replace-bar input:focus {
+    border-color: #6366f1;
+}
+
+[data-theme="light"] .find-replace-bar button {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+[data-theme="light"] .find-replace-bar button:hover {
+    background: #e2e8f0;
+}

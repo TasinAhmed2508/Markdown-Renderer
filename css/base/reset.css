@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    background: transparent; /* Changed from black to transparent so shader can be seen if underneath */
+}
+
+/* We remove the body background color entirely, as foundation.css handles the .shader-bg */
+body {
+    font-family: inherit; /* will inherit from .app or foundation */
+    line-height: 1.5;
+    color: inherit;
+}
+
+textarea, button, input {
+    font-family: inherit;
+}

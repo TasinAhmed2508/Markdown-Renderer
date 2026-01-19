@@ -1,0 +1,71 @@
+/* Button Styles */
+
+/* Liquid Glass Effects */
+.liquid-glass {
+    backdrop-filter: url("#container-glass");
+    -webkit-backdrop-filter: url("#container-glass");
+}
+
+.liquid-shadow {
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.03),
+        inset 0 0 6px 6px rgba(255, 255, 255, 0.12);
+}
+
+/* Metal Button Style */
+.metal-btn {
+    background: linear-gradient(to bottom, #333, #111);
+    color: #ddd;
+    border: 1px solid #444;
+    transition: all 0.2s;
+}
+
+.metal-btn:hover {
+    background: linear-gradient(to bottom, #444, #222);
+    color: #fff;
+    border-color: #666;
+}
+
+.metal-btn:active {
+    transform: scale(0.96);
+}
+
+/* Tool Button Base */
+.tool-btn {
+    transition: all 0.2s;
+}
+
+.tool-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.tool-btn.active {
+    background: rgba(99, 102, 241, 0.3);
+    color: #fff;
+}
+
+/* Light Mode */
+[data-theme="light"] .metal-btn {
+    background: linear-gradient(to bottom, #ffffff, #f1f5f9);
+    color: #334155;
+    border-color: #d1d5db;
+}
+
+[data-theme="light"] .metal-btn:hover {
+    background: linear-gradient(to bottom, #f8fafc, #e2e8f0);
+    color: #1e293b;
+    border-color: #9ca3af;
+}
+
+[data-theme="light"] .tool-btn {
+    color: #475569;
+}
+
+[data-theme="light"] .tool-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #1e293b;
+}
+
+[data-theme="light"] .tool-btn.active {
+    background: rgba(99, 102, 241, 0.2);
+    color: #4f46e5;
+}
