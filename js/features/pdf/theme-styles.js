@@ -19,9 +19,9 @@ export function generateContainerStyles(isLight) {
     const c = getThemeColors(isLight);
 
     return `
-        position: fixed;
-        top: -10000px;
-        left: 0;
+        position: absolute;
+        top: 0;
+        left: -9999px;
         width: ${PAGE.WIDTH}px;
         background-color: ${c.bg};
         color: ${c.text};
@@ -30,7 +30,9 @@ export function generateContainerStyles(isLight) {
         line-height: ${FONTS.LINE_HEIGHT};
         padding: ${PAGE.MARGIN}px;
         box-sizing: border-box;
-        z-index: -9999;
+        z-index: 0;
+        opacity: 0;
+        pointer-events: none;
     `.trim().replace(/\s+/g, ' ');
 }
 
