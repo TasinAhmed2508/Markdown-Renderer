@@ -113,6 +113,8 @@ export class MathHandler {
             const trimmed = content.trim();
 
             if (!trimmed) return match;
+            // Skip if content is already a placeholder
+            if (/MATHBLOCK|CODEBLOCK/.test(trimmed)) return match;
             // Skip clear currency-like values ($5, $12.99)
             if (/^\d+(?:[.,]\d+)?$/.test(trimmed)) return match;
             // Only treat as math if it contains math-ish syntax

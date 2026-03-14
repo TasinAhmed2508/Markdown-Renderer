@@ -376,6 +376,11 @@
         </div>
     </footer>
 
+    <!-- Author Credit -->
+    <div class="fixed bottom-6 left-8 z-50">
+        <span class="text-xs text-white/40 tracking-wide">Made by <a href="https://github.com/TasinAhmed2508" target="_blank" class="text-white/60 hover:text-white/90 transition-colors underline underline-offset-2">Tasin Ahmed</a></span>
+    </div>
+
     <!-- Three.js Shader Background Logic -->
     <script>
         // Init Icons
@@ -488,7 +493,7 @@
                 <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:3px;">ChatGPT Extractor Extension</div>
                 <div style="font-size:12px;color:#94a3b8;line-height:1.4;">One click to extract all ChatGPT responses with math &amp; code — auto-rendered here instantly.</div>
             </div>
-            <a id="ext-install-btn" href="https://github.com/AbirDey2002/Markdown-Renderer/tree/main/extension" target="_blank"
+            <a id="ext-install-btn" href="https://github.com/TasinAhmed2508/Markdown-Renderer/tree/master/extension" target="_blank"
                 style="flex-shrink:0;padding:8px 18px;background:linear-gradient(135deg,#0ea5e9,#8b5cf6);color:#fff;font-size:13px;font-weight:600;border-radius:8px;text-decoration:none;white-space:nowrap;transition:opacity 0.2s;"
                 onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
                 Install Extension
@@ -535,7 +540,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             // Force-clear old service worker caches on version mismatch
-            const APP_VERSION = 'v3';
+            const APP_VERSION = 'v4';
             if (localStorage.getItem('app_version') !== APP_VERSION) {
                 caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(() => {
                     navigator.serviceWorker.getRegistrations().then(regs => {

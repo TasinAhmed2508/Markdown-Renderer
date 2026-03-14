@@ -3,7 +3,7 @@
  * Cache-first for local assets, network-first for CDN resources
  */
 
-const CACHE_NAME = 'renderx-v3';
+const CACHE_NAME = 'renderx-v4';
 
 const APP_SHELL = [
     './',
