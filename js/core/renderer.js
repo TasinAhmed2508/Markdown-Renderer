@@ -6,6 +6,9 @@ import { parseMarkdown } from './parser.js';
 import { mathHandler } from './math-handler.js';
 import { postRender as postRenderDOM } from './post-render.js';
 import { processEmbeds } from '../features/embeds.js';
+import { processFootnotes } from '../features/footnotes.js';
+import { processAdmonitions } from '../features/admonitions.js';
+import { processEmoji } from '../features/emoji.js';
 
 export class Renderer {
     constructor() {
@@ -17,22 +20,86 @@ export class Renderer {
      * Pipeline: Fix Mermaid -> Protect Math -> Parse Markdown -> Restore Math -> Process Embeds
      */
     render(markdown) {
+        if (typeof markdown !== 'string') return '';
+
         this.mathHandler.reset();
 
-        // 0. Pre-process: Auto-quote Mermaid labels with special characters
-        let processed = this.fixMermaidLabels(markdown);
+        // 0. Plugin pre-processors
+        let processed = markdown;
+        try {
+            if (window.RenderXPlugins) {
+                const preProcessors = window.RenderXPlugins.getPreProcessors();
+                for (const fn of preProcessors) {
+                    processed = fn(processed) || processed;
+                }
+            }
+        } catch (err) {
+            console.warn('Plugin pre-processor error:', err);
+        }
 
-        // 1. Protect Math Blocks (LaTeX)
-        processed = this.mathHandler.protectMath(processed);
+        // 0b. Pre-process: Emoji shortcodes
+        try {
+            processed = processEmoji(processed);
+        } catch (err) {
+            console.warn('Emoji processing error:', err);
+        }
 
-        // 2. Parse Markdown
+        // 1. Pre-process: Auto-quote Mermaid labels
+        try {
+            processed = this.fixMermaidLabels(processed);
+        } catch (err) {
+            console.warn('Mermaid label fix error:', err);
+        }
+
+        // 2. Protect Math Blocks (LaTeX)
+        try {
+            processed = this.mathHandler.protectMath(processed);
+        } catch (err) {
+            console.warn('Math protection error:', err);
+        }
+
+        // 3. Parse Markdown
         let html = parseMarkdown(processed);
 
-        // 3. Restore Math Blocks
-        html = this.mathHandler.restoreMath(html);
+        // 4. Restore Math Blocks
+        try {
+            html = this.mathHandler.restoreMath(html);
+        } catch (err) {
+            console.warn('Math restore error:', err);
+        }
 
-        // 4. Process Embeds (YouTube, CodeSandbox, etc.)
-        html = processEmbeds(html);
+        // 5. Process Embeds
+        try {
+            html = processEmbeds(html);
+        } catch (err) {
+            console.warn('Embed processing error:', err);
+        }
+
+        // 6. Process Footnotes
+        try {
+            html = processFootnotes(html);
+        } catch (err) {
+            console.warn('Footnotes processing error:', err);
+        }
+
+        // 7. Process Admonitions (GitHub/Obsidian callouts)
+        try {
+            html = processAdmonitions(html);
+        } catch (err) {
+            console.warn('Admonitions processing error:', err);
+        }
+
+        // 8. Plugin post-processors
+        try {
+            if (window.RenderXPlugins) {
+                const postProcessors = window.RenderXPlugins.getPostProcessors();
+                for (const fn of postProcessors) {
+                    html = fn(html) || html;
+                }
+            }
+        } catch (err) {
+            console.warn('Plugin post-processor error:', err);
+        }
 
         return html;
     }
@@ -50,20 +117,30 @@ export class Renderer {
                 return `__QUOTED_STRING_${placeholders.length - 1}__`;
             });
 
-            // Regex for graph nodes: id[Label Text] or id(Label) or id{Label}
-            // We want to quote the content if it has special chars
-            const fixedBlock = protectedBlock.replace(/([a-zA-Z0-9_]+)(\[|\(|\{)([^\])}]+)(\]|\)|\})/g, (m, id, open, content, close) => {
-                // If content is just a placeholder, ignore
-                if (content.trim().startsWith('__QUOTED_STRING_')) return m;
+            const quoteContent = (content) => {
+                const trimmed = content.trim();
 
-                // Check for problematic chars: ( ) [ ] { } = ; "
-                // If found, wrap in quotes
-                if (/[(){}\[\]=;"']/.test(content)) {
-                    // Escape internal quotes if any
-                    const safeContent = content.replace(/"/g, '#quot;');
-                    return `${id}${open}"${safeContent.trim()}"${close}`;
-                }
-                return m;
+                if (!trimmed) return content;
+                if (trimmed.startsWith('__QUOTED_STRING_')) return content;
+                // Do not touch complex nested delimiter content; fail-safe no-op.
+                if (/[()[\]{}]/.test(trimmed)) return content;
+                // Keep plain labels as-is.
+                if (!/[=;"']/.test(trimmed) && trimmed === content) return content;
+
+                return `"${trimmed.replace(/"/g, '\\"')}"`;
+            };
+
+            let fixedBlock = protectedBlock;
+
+            // Match only valid, delimiter-specific node patterns to avoid corruption.
+            fixedBlock = fixedBlock.replace(/([a-zA-Z0-9_]+)\[([^\]\n]+)\]/g, (_, id, content) => {
+                return `${id}[${quoteContent(content)}]`;
+            });
+            fixedBlock = fixedBlock.replace(/([a-zA-Z0-9_]+)\(([^)\n]+)\)/g, (_, id, content) => {
+                return `${id}(${quoteContent(content)})`;
+            });
+            fixedBlock = fixedBlock.replace(/([a-zA-Z0-9_]+)\{([^}\n]+)\}/g, (_, id, content) => {
+                return `${id}{${quoteContent(content)}}`;
             });
 
             // Restore placeholders
@@ -75,8 +152,8 @@ export class Renderer {
      * Post-render DOM processing (Highlight.js, Mermaid, KaTeX)
      * This runs AFTER the HTML is inserted into the document.
      */
-    postRender(element) {
-        postRenderDOM(element);
+    postRender(element, isCurrent) {
+        return postRenderDOM(element, isCurrent);
     }
 }
 

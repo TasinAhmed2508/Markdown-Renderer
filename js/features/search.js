@@ -66,7 +66,13 @@ function findNext(findInput, textarea) {
         textarea.focus();
         textarea.setSelectionRange(index, index + query.length);
     } else {
-        alert('Not found');
+        // Non-blocking visual feedback instead of alert()
+        findInput.style.outline = '2px solid #f44336';
+        findInput.placeholder = 'Not found';
+        setTimeout(() => {
+            findInput.style.outline = '';
+            findInput.placeholder = 'Find...';
+        }, 1500);
     }
 }
 
@@ -90,8 +96,11 @@ function replaceAll(findInput, replaceInput, textarea) {
     const query = findInput.value;
     const replacement = replaceInput.value;
     if (!query) return;
+    if (query === replacement) return;
 
     const newText = textarea.value.replaceAll(query, replacement);
+    if (newText === textarea.value) return;
+
     textarea.value = newText;
     setState({ markdown: newText });
 }

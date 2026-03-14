@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TA RenderX</title>
+    <link rel="manifest" href="manifest.json">
 
     <!-- 1. Design System: Tailwind + AnoAI Styles -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,7 +14,7 @@
     <!-- 2. Logic Dependencies (Markdown, Math, Diagrams) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/lib/marked.umd.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <!-- Extra languages for highlight.js (100+ supported) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
@@ -70,6 +71,10 @@
 
     <!-- 6. Themes -->
     <link rel="stylesheet" href="css/themes/light.css">
+    <link rel="stylesheet" href="css/themes/sunset.css">
+    <link rel="stylesheet" href="css/themes/ocean.css">
+    <link rel="stylesheet" href="css/themes/forest.css">
+    <link rel="stylesheet" href="css/themes/dark.css">
 
     <!-- 7. Responsive -->
     <link rel="stylesheet" href="css/responsive/mobile.css">
@@ -165,6 +170,31 @@
                         <i data-lucide="file-text" class="w-4 h-4 text-rose-400"></i>
                         <span>PDF Document</span>
                     </button>
+                    <div class="h-px bg-white/5 w-full"></div>
+                    <button id="btn-export-latex"
+                        class="w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 flex items-center gap-3 transition-colors">
+                        <i data-lucide="sigma" class="w-4 h-4 text-cyan-400"></i>
+                        <span>LaTeX (.tex)</span>
+                    </button>
+                    <div class="h-px bg-white/5 w-full"></div>
+                    <button id="btn-export-json"
+                        class="w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 flex items-center gap-3 transition-colors">
+                        <i data-lucide="braces" class="w-4 h-4 text-amber-400"></i>
+                        <span>JSON AST</span>
+                    </button>
+                    <div class="h-px bg-white/5 w-full"></div>
+                    <button id="btn-export-text"
+                        class="w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 flex items-center gap-3 transition-colors">
+                        <i data-lucide="file-minus" class="w-4 h-4 text-gray-400"></i>
+                        <span>Plain Text</span>
+                    </button>
+                    <div class="h-px bg-white/5 w-full"></div>
+                    <button id="btn-print"
+                        class="w-full text-left px-4 py-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 flex items-center gap-3 transition-colors"
+                        onclick="window.print()">
+                        <i data-lucide="printer" class="w-4 h-4 text-slate-400"></i>
+                        <span>Print</span>
+                    </button>
                 </div>
             </div>
 
@@ -180,6 +210,20 @@
                     <i data-lucide="sun" class="w-4 h-4 theme-icon-light hidden"></i>
                     <i data-lucide="moon" class="w-4 h-4 theme-icon-dark"></i>
                 </div>
+            </button>
+
+            <!-- Settings Button -->
+            <button id="btn-settings"
+                class="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                title="Settings (Fonts, Themes)">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Share Button -->
+            <button id="btn-share"
+                class="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors hidden md:inline-flex"
+                title="Share Document">
+                <i data-lucide="share-2" class="w-4 h-4"></i>
             </button>
 
             <!-- Save MD (Metal) -->
@@ -201,22 +245,55 @@
                 <div class="flex items-center bg-white/5 rounded-lg p-1">
                     <button
                         class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white tool-btn transition-colors"
-                        data-tool="bold" title="Bold"><i class="fas fa-bold"></i></button>
+                        data-tool="bold" title="Bold (Ctrl+B)"><i class="fas fa-bold"></i></button>
                     <button
                         class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white tool-btn transition-colors"
-                        data-tool="italic" title="Italic"><i class="fas fa-italic"></i></button>
+                        data-tool="italic" title="Italic (Ctrl+I)"><i class="fas fa-italic"></i></button>
                     <button
                         class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white tool-btn transition-colors"
-                        data-tool="code" title="Code"><i class="fas fa-code"></i></button>
+                        data-tool="code" title="Code (Ctrl+`)"><i class="fas fa-code"></i></button>
+                    <button
+                        class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white tool-btn transition-colors"
+                        data-tool="link" title="Link (Ctrl+K)"><i class="fas fa-link"></i></button>
+                </div>
+
+                <div class="w-px h-6 bg-white/10 mx-1"></div>
+
+                <div class="flex items-center bg-white/5 rounded-lg p-1">
+                    <button
+                        class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white tool-btn transition-colors"
+                        data-tool="list-ul" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+                    <button
+                        class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white tool-btn transition-colors"
+                        data-tool="list-ol" title="Numbered List"><i class="fas fa-list-ol"></i></button>
                 </div>
 
                 <div class="w-px h-6 bg-white/10 mx-1"></div>
 
                 <div class="flex items-center bg-white/5 rounded-lg p-1">
                     <button class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
-                        id="btn-find-toggle" title="Search"><i class="fas fa-search"></i></button>
+                        id="btn-find-toggle" title="Search (Ctrl+F)"><i class="fas fa-search"></i></button>
                     <button class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
                         id="btn-typewriter" title="Typewriter Mode"><i class="fas fa-align-center"></i></button>
+                    <button class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                        id="btn-word-wrap" title="Word Wrap"><i class="fas fa-text-width"></i></button>
+                    <button class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                        id="btn-spellcheck" title="Spellcheck"><i class="fas fa-spell-check"></i></button>
+                </div>
+
+                <div class="w-px h-6 bg-white/10 mx-1"></div>
+
+                <div class="flex items-center bg-white/5 rounded-lg p-1">
+                    <button class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                        id="btn-zen-mode" title="Zen Mode"><i class="fas fa-expand"></i></button>
+                    <button class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                        id="btn-slides" title="Presentation Mode"><i class="fas fa-tv"></i></button>
+                    <button class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                        id="btn-toc" title="Table of Contents"><i class="fas fa-bars"></i></button>
+                    <button class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                        id="btn-outline" title="Document Outline"><i class="fas fa-stream"></i></button>
+                    <button class="p-2 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                        id="btn-version-history" title="Version History"><i class="fas fa-history"></i></button>
                 </div>
             </div>
 
@@ -403,6 +480,11 @@
 
     <!-- Load Main Logic -->
     <script type="module" src="js/main.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
+        }
+    </script>
 </body>
 
 </html>

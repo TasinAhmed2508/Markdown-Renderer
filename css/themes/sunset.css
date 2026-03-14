@@ -1,0 +1,239 @@
+/* ============================================
+   SUNSET THEME - Warm Tones
+   ============================================ */
+
+/* CSS Variables for Sunset Mode */
+[data-theme="sunset"] {
+    --bg-primary: #1a0a0a;
+    --bg-secondary: #2d1515;
+    --bg-tertiary: #3a1c1c;
+    --text-primary: #fde8d0;
+    --text-secondary: #e0c4a8;
+    --text-muted: #a08060;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Body & Background */
+[data-theme="sunset"] body {
+    background: linear-gradient(135deg, #1a0a0a, #2d1515);
+    color: #fde8d0;
+}
+
+[data-theme="sunset"] #canvas-container {
+    opacity: 0.2;
+    filter: saturate(1.2) hue-rotate(-20deg);
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+[data-theme="sunset"] #navbar {
+    background: rgba(26, 10, 10, 0.85) !important;
+    border-bottom: 1px solid rgba(255, 107, 107, 0.15);
+    backdrop-filter: blur(12px);
+}
+
+[data-theme="sunset"] #navbar .text-white {
+    color: #fde8d0 !important;
+}
+
+[data-theme="sunset"] #navbar svg {
+    color: #ff6b6b;
+}
+
+/* Metal Buttons in Navbar */
+[data-theme="sunset"] .metal-btn {
+    background: linear-gradient(to bottom, #3a1c1c, #2d1515) !important;
+    color: #fde8d0 !important;
+    border-color: rgba(255, 107, 107, 0.2) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="sunset"] .metal-btn:hover {
+    background: linear-gradient(to bottom, #4a2525, #3a1c1c) !important;
+    color: #fff !important;
+}
+
+/* ============================================
+   GLASS PANES
+   ============================================ */
+[data-theme="sunset"] .glass-pane {
+    background: rgba(26, 10, 10, 0.75) !important;
+    border-color: rgba(255, 107, 107, 0.12) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Window Chrome Header */
+[data-theme="sunset"] .window-chrome,
+[data-theme="sunset"] #window-chrome {
+    background: rgba(45, 21, 21, 0.95) !important;
+}
+
+[data-theme="sunset"] .window-chrome .text-xs {
+    color: #a08060 !important;
+}
+
+/* ============================================
+   EDITOR PANE
+   ============================================ */
+[data-theme="sunset"] #markdown-input {
+    color: #fde8d0 !important;
+    background: transparent !important;
+    caret-color: #ff6b6b;
+}
+
+[data-theme="sunset"] #markdown-input::placeholder {
+    color: #a08060;
+}
+
+/* Line Numbers */
+[data-theme="sunset"] #line-numbers {
+    color: #a08060 !important;
+    background: transparent !important;
+    border-right-color: rgba(255, 107, 107, 0.1) !important;
+}
+
+/* Editor Toolbar */
+[data-theme="sunset"] .editor-toolbar {
+    background: rgba(45, 21, 21, 0.9);
+    border-bottom-color: rgba(255, 107, 107, 0.1);
+}
+
+[data-theme="sunset"] .editor-toolbar button {
+    color: #e0c4a8;
+}
+
+[data-theme="sunset"] .editor-toolbar button:hover {
+    background: rgba(255, 107, 107, 0.15);
+    color: #ff6b6b;
+}
+
+/* ============================================
+   PREVIEW PANE
+   ============================================ */
+[data-theme="sunset"] #canvas {
+    color: #fde8d0 !important;
+    background: rgba(26, 10, 10, 0.9) !important;
+}
+
+/* ============================================
+   STATUS BAR
+   ============================================ */
+[data-theme="sunset"] .flex.items-center.gap-4.text-xs {
+    color: #a08060 !important;
+}
+
+[data-theme="sunset"] [id*="word-count"],
+[data-theme="sunset"] [id*="read-time"] {
+    color: #a08060 !important;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+[data-theme="sunset"] .markdown-body table {
+    background: rgba(45, 21, 21, 0.6);
+    border-color: rgba(255, 107, 107, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="sunset"] .markdown-body thead {
+    background: linear-gradient(135deg, #3a1c1c, #2d1515);
+}
+
+[data-theme="sunset"] .markdown-body th {
+    color: #ff6b6b;
+    border-color: rgba(255, 107, 107, 0.15);
+}
+
+[data-theme="sunset"] .markdown-body td {
+    color: #e0c4a8;
+    border-color: rgba(255, 107, 107, 0.08);
+}
+
+[data-theme="sunset"] .markdown-body tbody tr:hover {
+    background: rgba(255, 107, 107, 0.06);
+}
+
+/* ============================================
+   CODE BLOCKS
+   ============================================ */
+[data-theme="sunset"] pre {
+    background: #1f0f0f !important;
+    border: 1px solid rgba(255, 107, 107, 0.12);
+}
+
+[data-theme="sunset"] code {
+    background: rgba(255, 107, 107, 0.1) !important;
+    color: #ff6b6b !important;
+}
+
+[data-theme="sunset"] pre code {
+    color: #fde8d0 !important;
+}
+
+/* ============================================
+   MERMAID DIAGRAMS
+   ============================================ */
+[data-theme="sunset"] .mermaid {
+    background: linear-gradient(135deg, #1f0f0f, #2d1515) !important;
+    border-color: rgba(255, 107, 107, 0.12) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   BLOCKQUOTES
+   ============================================ */
+[data-theme="sunset"] blockquote {
+    background: rgba(255, 107, 107, 0.06);
+    border-left-color: #ee5a24;
+    color: #e0c4a8;
+}
+
+/* ============================================
+   SCROLLBARS
+   ============================================ */
+[data-theme="sunset"] ::-webkit-scrollbar-track {
+    background: #1a0a0a;
+}
+
+[data-theme="sunset"] ::-webkit-scrollbar-thumb {
+    background: #4a2525;
+    border-radius: 4px;
+}
+
+[data-theme="sunset"] ::-webkit-scrollbar-thumb:hover {
+    background: #5a3030;
+}
+
+/* ============================================
+   THEME SWATCHES
+   ============================================ */
+[data-theme="sunset"] .swatch {
+    border-color: rgba(255, 107, 107, 0.2) !important;
+}
+
+[data-theme="sunset"] .swatch.active {
+    border-color: #ff6b6b !important;
+}
+
+/* ============================================
+   EXPORT/DROPDOWN MENUS
+   ============================================ */
+[data-theme="sunset"] #export-menu,
+[data-theme="sunset"] .dropdown-menu {
+    background: rgba(45, 21, 21, 0.98) !important;
+    border-color: rgba(255, 107, 107, 0.15) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="sunset"] #export-menu button,
+[data-theme="sunset"] .dropdown-menu button {
+    color: #fde8d0;
+}
+
+[data-theme="sunset"] #export-menu button:hover,
+[data-theme="sunset"] .dropdown-menu button:hover {
+    background: rgba(255, 107, 107, 0.1);
+}

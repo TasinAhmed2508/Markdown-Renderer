@@ -10,8 +10,13 @@ export function renderPlantUML(element) {
 
     const selectors = 'pre code.language-uml, pre code.language-plantuml';
     element.querySelectorAll(selectors).forEach((block) => {
+        const pre = block.parentElement;
+        if (!pre) return;
+
         try {
             const code = block.textContent.trim();
+            if (!code) return;
+
             const encoded = plantumlEncoder.encode(code);
             const url = `https://www.plantuml.com/plantuml/svg/${encoded}`;
 
@@ -21,13 +26,15 @@ export function renderPlantUML(element) {
             img.className = 'plantuml-diagram';
             img.loading = 'lazy';
 
-            // Handle load errors
+            // Show error fallback if image fails to load
             img.onerror = () => {
-                console.error('PlantUML load failed');
-                img.replaceWith(block.parentElement);
+                console.error('PlantUML load failed for:', url);
+                const errDiv = document.createElement('div');
+                errDiv.style.cssText = 'border:1px dashed #ef4444;color:#ef4444;padding:12px;border-radius:6px;font-size:13px;';
+                errDiv.textContent = 'PlantUML diagram failed to load';
+                img.replaceWith(errDiv);
             };
 
-            const pre = block.parentElement;
             pre.replaceWith(img);
         } catch (err) {
             console.error('PlantUML encoding error:', err);

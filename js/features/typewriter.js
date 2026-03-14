@@ -37,8 +37,11 @@ export function initTypewriter() {
 
 function centerLine() {
     const textarea = elements.input;
+    if (!textarea) return;
+
     const style = window.getComputedStyle(textarea);
     const lineHeight = parseFloat(style.lineHeight);
+    if (!lineHeight || isNaN(lineHeight) || lineHeight <= 0) return;
     
     // Count newlines before cursor to estimate line number
     const textBeforeCursor = textarea.value.substr(0, textarea.selectionStart);
@@ -46,8 +49,7 @@ function centerLine() {
     
     // Calculate target scroll position
     const visibleHeight = textarea.clientHeight;
-    // Offset by roughly half height
     const targetScroll = (lineIndex * lineHeight) - (visibleHeight / 2) + (lineHeight / 2);
     
-    textarea.scrollTop = targetScroll;
+    textarea.scrollTop = Math.max(0, targetScroll);
 }

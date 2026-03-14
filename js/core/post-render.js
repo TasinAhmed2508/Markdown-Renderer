@@ -8,6 +8,7 @@
 import { renderCharts } from '../features/chart.js';
 import { renderPlantUML } from '../features/plantuml.js';
 import { initCopyButtons } from '../features/copy-code.js';
+import { renderCSVTables } from '../features/csv-table.js';
 
 /**
  * Apply syntax highlighting to code blocks
@@ -30,7 +31,37 @@ export function highlightCode(element) {
 /**
  * Render Mermaid diagrams
  */
-export function renderMermaid(element) {
+function buildMermaidErrorNode(message, source) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'mermaid-error-msg';
+
+    const title = document.createElement('div');
+    title.style.fontWeight = '700';
+    title.style.marginBottom = '6px';
+    title.textContent = 'Mermaid Syntax Error';
+    wrapper.appendChild(title);
+
+    const detail = document.createElement('div');
+    detail.style.opacity = '0.9';
+    detail.style.whiteSpace = 'pre-wrap';
+    detail.textContent = message || 'Unknown syntax error';
+    wrapper.appendChild(detail);
+
+    const debug = document.createElement('pre');
+    debug.style.marginTop = '8px';
+    debug.style.padding = '8px';
+    debug.style.borderRadius = '6px';
+    debug.style.background = 'rgba(0,0,0,0.35)';
+    debug.style.color = '#cbd5e1';
+    debug.style.fontSize = '12px';
+    debug.style.overflowX = 'auto';
+    debug.textContent = source || '';
+    wrapper.appendChild(debug);
+
+    return wrapper;
+}
+
+export async function renderMermaid(element, isCurrent = () => true) {
     if (typeof mermaid === 'undefined') return;
 
     // 1. Convert code blocks to mermaid divs
@@ -38,7 +69,9 @@ export function renderMermaid(element) {
         const pre = block.closest('pre');
         const div = document.createElement('div');
         div.className = 'mermaid';
-        div.textContent = block.textContent;
+        const source = block.textContent || '';
+        div.textContent = source;
+        div.dataset.source = source;
         pre.replaceWith(div);
     });
 
@@ -48,46 +81,55 @@ export function renderMermaid(element) {
 
     if (unprocessed.length === 0) return;
 
-    // Strategy: Try batch first. If fail, retry individually to isolate errors.
-    mermaid.run({ nodes: unprocessed })
-        .then(() => {
-            // Mark all as processed
-            unprocessed.forEach(n => n.setAttribute('data-processed', 'true'));
-        })
-        .catch(async (batchErr) => {
-            console.warn('Mermaid batch render failed, retrying individually...', batchErr);
+    const hasMermaidError = (node) => {
+        if (!node) return false;
+        return !!node.querySelector('svg[id*="error"]') ||
+            /syntax error/i.test(node.textContent || '');
+    };
 
-            // Retry individually
-            for (const node of unprocessed) {
-                try {
-                    await mermaid.run({ nodes: [node] });
+    const renderSingle = async (node) => {
+        if (!node || !node.isConnected || !isCurrent()) return;
 
-                    // Check if Mermaid rendered an error SVG (it doesn't throw in v10+)
-                    // Error SVGs usually contain specific text or IDs
-                    if (node.querySelector('svg[id*="error"]') || node.textContent.includes('Syntax error')) {
-                        throw new Error('Mermaid parser failed to render diagram');
-                    }
+        const source = node.dataset.source || node.textContent || '';
 
-                    node.setAttribute('data-processed', 'true');
-                } catch (err) {
-                    // This specific node failed
-                    node.innerHTML = `
-                        <div class="p-4 border border-red-500/50 bg-red-900/10 text-red-400 rounded-lg text-sm font-mono my-4">
-                            <div class="font-bold mb-2 flex items-center gap-2">
-                                <i class="fa-solid fa-triangle-exclamation"></i>
-                                Mermaid Syntax Error
-                            </div>
-                            <div class="opacity-80 whitespace-pre-wrap">${err.message || 'Unknown syntax error'}</div>
-                        </div>
-                    `;
-                    // Restore original code for debugging
-                    const debug = document.createElement('pre');
-                    debug.className = 'text-xs text-gray-500 mt-2 p-2 bg-black/20 rounded overflow-x-auto';
-                    debug.textContent = node.textContent;
-                    node.appendChild(debug);
-                }
+        try {
+            await mermaid.run({ nodes: [node] });
+
+            if (!node.isConnected || !isCurrent()) return;
+            if (hasMermaidError(node)) {
+                throw new Error('Mermaid parser failed to render diagram');
             }
-        });
+
+            node.setAttribute('data-processed', 'true');
+        } catch (err) {
+            if (!node.isConnected || !isCurrent()) return;
+            node.replaceChildren(buildMermaidErrorNode(err.message || 'Unknown syntax error', source));
+            node.setAttribute('data-processed', 'error');
+        }
+    };
+
+    // Strategy: Try batch first. If fail, retry individually to isolate errors.
+    try {
+        await mermaid.run({ nodes: unprocessed });
+
+        if (!isCurrent()) return;
+
+        for (const node of unprocessed) {
+            if (!node.isConnected) continue;
+            if (hasMermaidError(node)) {
+                await renderSingle(node);
+            } else {
+                node.setAttribute('data-processed', 'true');
+            }
+        }
+    } catch (batchErr) {
+        console.warn('Mermaid batch render failed, retrying individually...', batchErr);
+
+        for (const node of unprocessed) {
+            if (!isCurrent()) return;
+            await renderSingle(node);
+        }
+    }
 }
 
 /**
@@ -111,16 +153,23 @@ export function renderMath(element) {
 /**
  * Run all post-render processing on an element
  */
-export function postRender(element) {
+export async function postRender(element, isCurrent = () => true) {
     // 1. Highlight standard code first
     highlightCode(element);
 
     // 2. Render specialized diagrams/charts
     // These modules handle finding their specific blocks
-    renderMermaid(element);
+    await renderMermaid(element, isCurrent);
+    if (!isCurrent()) return;
+
     renderCharts(element);
+    if (!isCurrent()) return;
+
     renderPlantUML(element);
     renderMath(element);
+
+    // 2b. Render CSV/TSV tables
+    try { renderCSVTables(element); } catch (err) { console.warn('CSV render error:', err); }
 
     // 3. UI enhancements
     initCopyButtons(element);

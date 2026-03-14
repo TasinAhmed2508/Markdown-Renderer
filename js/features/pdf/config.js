@@ -56,7 +56,12 @@ export function getThemeColors(isLight) {
 /**
  * Build html2pdf options
  */
-export function buildPdfOptions(filename, bgColor) {
+export function buildPdfOptions(filename, bgColor, onClone) {
+    const scrollY = typeof window !== 'undefined' ? -window.scrollY : 0;
+    const windowWidth = typeof document !== 'undefined'
+        ? Math.max(PAGE.WIDTH, document.documentElement?.scrollWidth || PAGE.WIDTH)
+        : PAGE.WIDTH;
+
     return {
         margin: 0,
         filename: filename,
@@ -66,9 +71,10 @@ export function buildPdfOptions(filename, bgColor) {
             useCORS: true,
             backgroundColor: bgColor,
             logging: false,
-            scrollY: 0,
-            windowWidth: PAGE.WIDTH,
-            allowTaint: true
+            scrollY,
+            windowWidth,
+            allowTaint: false,
+            onclone: typeof onClone === 'function' ? onClone : undefined
         },
         jsPDF: {
             unit: 'px',
@@ -76,6 +82,9 @@ export function buildPdfOptions(filename, bgColor) {
             orientation: 'portrait',
             hotfixes: ['px_scaling']
         },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        pagebreak: {
+            mode: ['css'],
+            avoid: ['pre', 'table', '.mermaid', '.chart-container', '.katex-display']
+        }
     };
 }

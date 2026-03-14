@@ -6,10 +6,38 @@
 export class MathHandler {
     constructor() {
         this.mathBlocks = [];
+        this.codeBlocks = [];
     }
 
     reset() {
         this.mathBlocks = [];
+        this.codeBlocks = [];
+    }
+
+    /**
+     * Temporarily protect fenced and inline code from math regex transforms.
+     */
+    protectCode(text) {
+        const replaceCode = (regex) => {
+            text = text.replace(regex, (match) => {
+                const id = this.codeBlocks.length;
+                this.codeBlocks.push(match);
+                return `<!--CODEBLOCK${id}PLACEHOLDER-->`;
+            });
+        };
+
+        // Fenced code blocks (```...```)
+        replaceCode(/```[\s\S]*?```/g);
+        // Inline code (`...`) on the same line
+        replaceCode(/`[^`\n]+`/g);
+
+        return text;
+    }
+
+    restoreCode(text) {
+        return text.replace(/<!--CODEBLOCK(\d+)PLACEHOLDER-->/g, (_, index) => {
+            return this.codeBlocks[Number(index)] ?? '';
+        });
     }
 
     /**
@@ -34,6 +62,9 @@ export class MathHandler {
             });
         };
 
+        // Protect code before any math regex runs
+        text = this.protectCode(text);
+
         // Order is critical: Multi-line/complex delimiters first!
         // 1. Display Math $$...$$ (can be multiline)
         text = replace(/\$\$([\s\S]+?)\$\$/g, 'display');
@@ -45,8 +76,8 @@ export class MathHandler {
         // IMPROVED: Supports indented blocks (list items, etc.)
         // Matches: optional indent + [ + optional whitespace + newline + content + newline + optional indent + ]
         text = text.replace(/^[ \t]*\[[ \t]*\n([\s\S]+?)\n[ \t]*\][ \t]*$/gm, (match, content) => {
-            // Only convert if content looks like LaTeX (contains backslash commands)
-            if (!/\\[a-zA-Z]/.test(content)) return match;
+            // Only convert if content looks like math (LaTeX commands, operators, etc.)
+            if (!/\\[a-zA-Z]/.test(content) && !/[_^=]/.test(content) && !/\d/.test(content)) return match;
             const id = this.mathBlocks.length;
             this.mathBlocks.push({ id, content: `\\[${content.trim()}\\]`, type: 'display' });
             return `\n<!--MATHBLOCK${id}PLACEHOLDER-->\n`;
@@ -56,8 +87,28 @@ export class MathHandler {
         text = replace(/\\\(([\s\S]+?)\\\)/g, 'inline');
 
         // 5. Inline Math $...$ (single line, no newlines inside)
-        // Careful: avoid matching price like "$5" or "$10"
-        text = replace(/\$([^\$\n]+?[^\d\s])\$/g, 'inline');
+        // Keep valid math like $x_1$, but ignore obvious currency-like tokens.
+        text = text.replace(/(^|[^\\])\$([^\n$]+?)\$/gm, (match, prefix, content) => {
+            const trimmed = content.trim();
+
+            if (!trimmed) return match;
+            // Skip clear currency-like values ($5, $12.99)
+            if (/^\d+(?:[.,]\d+)?$/.test(trimmed)) return match;
+            // Only treat as math if it contains math-ish syntax
+            if (!/[\\a-zA-Z_^{}()[\]=+\-*/]/.test(trimmed)) return match;
+
+            const id = this.mathBlocks.length;
+            this.mathBlocks.push({
+                id,
+                content: `$${content}$`,
+                type: 'inline'
+            });
+
+            return `${prefix}<!--MATHBLOCK${id}PLACEHOLDER-->`;
+        });
+
+        // Restore code blocks before markdown parsing
+        text = this.restoreCode(text);
 
         return text;
     }
@@ -67,7 +118,8 @@ export class MathHandler {
      * Display math is wrapped in a block-level div for proper layout.
      */
     restoreMath(html) {
-        this.mathBlocks.forEach(block => {
+        for (let i = 0; i < this.mathBlocks.length; i++) {
+            const block = this.mathBlocks[i];
             const safeContent = block.content
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
@@ -77,14 +129,15 @@ export class MathHandler {
 
             const placeholder = `<!--MATHBLOCK${block.id}PLACEHOLDER-->`;
 
+            if (html.indexOf(placeholder) === -1) continue;
+
             if (block.type === 'display') {
-                // Wrap display math in a block-level div for proper layout
                 const wrapped = `<div class="math-display" style="display:block;width:100%;margin:1em 0;text-align:center;">${safeContent}</div>`;
                 html = html.replace(placeholder, wrapped);
             } else {
                 html = html.replace(placeholder, safeContent);
             }
-        });
+        }
         return html;
     }
 }

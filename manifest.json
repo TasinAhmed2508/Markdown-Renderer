@@ -1,0 +1,27 @@
+{
+    "name": "TA RenderX",
+    "short_name": "RenderX",
+    "description": "Advanced Markdown Renderer with live preview",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "theme_color": "#0d1117",
+    "background_color": "#0d1117",
+    "orientation": "any",
+    "scope": "./",
+    "lang": "en",
+    "categories": ["productivity", "utilities"],
+    "icons": [
+        {
+            "src": "icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

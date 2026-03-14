@@ -81,10 +81,18 @@ export function removeInteractiveElements(clone) {
 /**
  * Ensure all images have explicit dimensions
  */
-export function fixImageDimensions(clone) {
-    clone.querySelectorAll('img').forEach(img => {
-        if (!img.style.width) img.style.width = `${img.naturalWidth}px`;
-        if (!img.style.height) img.style.height = `${img.naturalHeight}px`;
+export function fixImageDimensions(clone, source = null) {
+    const sourceImages = source ? Array.from(source.querySelectorAll('img')) : [];
+    const cloneImages = Array.from(clone.querySelectorAll('img'));
+
+    cloneImages.forEach((img, index) => {
+        const sourceImg = sourceImages[index];
+
+        const width = sourceImg?.naturalWidth || sourceImg?.width || img.naturalWidth || img.width;
+        const height = sourceImg?.naturalHeight || sourceImg?.height || img.naturalHeight || img.height;
+
+        if (!img.style.width && width > 0) img.style.width = `${width}px`;
+        if (!img.style.height && height > 0) img.style.height = `${height}px`;
         img.style.maxWidth = '100%';
     });
     return clone;

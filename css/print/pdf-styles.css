@@ -2,24 +2,162 @@
 
 /* Page break rules */
 @media print {
+    /* Hide all app chrome */
+    #navbar,
+    #canvas-container,
+    #editor-toolbar,
+    #line-numbers,
+    .glass-pane.group\/editor,
+    footer,
+    #tabs-bar,
+    #find-replace-bar,
+    .copy-code-btn,
+    .code-block-wrapper button,
+    #theme-swatches,
+    #padding-slider,
+    #btn-toc,
+    #btn-outline,
+    .toc-panel,
+    .outline-panel,
+    #command-palette,
+    #custom-theme-modal,
+    #version-history-panel,
+    #slide-overlay,
+    #pdf-progress-modal,
+    .mermaid-editor-panel,
+    .table-editor-modal,
+    .collaboration-modal,
+    .mobile-toggle-btn,
+    .mobile-toolbar,
+    .split-pane-resizer,
+    svg.hidden {
+        display: none !important;
+    }
+
+    /* Show only the preview content */
+    body {
+        background: white !important;
+        color: #1e293b !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    .app-grid {
+        display: block !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    .glass-pane {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+    }
+
+    #canvas {
+        padding: 0 !important;
+    }
+
+    #window-chrome {
+        background: white !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        max-width: 100% !important;
+    }
+
+    #window-chrome > div:first-child {
+        display: none !important;
+    }
+
+    #markdown-output {
+        color: #1e293b !important;
+        padding: 20px !important;
+    }
+
     h1, h2, h3, h4, h5, h6 {
+        color: #1e293b !important;
         page-break-after: avoid;
         break-after: avoid;
     }
-    
+
     pre, code, table, .mermaid, .chart-container {
         page-break-inside: avoid;
         break-inside: avoid;
     }
-    
+
+    pre {
+        background: #f6f8fa !important;
+        border: 1px solid #e2e8f0 !important;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    code {
+        color: #1e293b !important;
+    }
+
+    a {
+        color: #2563eb !important;
+        text-decoration: underline !important;
+    }
+
+    blockquote {
+        border-left: 3px solid #3b82f6 !important;
+        color: #64748b !important;
+        page-break-inside: avoid;
+    }
+
+    table {
+        border-collapse: collapse !important;
+    }
+
+    th, td {
+        border: 1px solid #e2e8f0 !important;
+        color: #1e293b !important;
+        padding: 8px 12px !important;
+    }
+
+    th {
+        background: #f8fafc !important;
+    }
+
     p, li {
+        color: #1e293b !important;
         orphans: 3;
         widows: 3;
     }
-    
+
     img {
         max-width: 100% !important;
         page-break-inside: avoid;
+    }
+
+    .katex-display {
+        margin: 1em 0;
+    }
+
+    .mermaid svg {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .chart-container {
+        max-width: 500px;
+        margin: 1em auto;
+    }
+
+    /* Footnotes */
+    .footnotes {
+        border-top: 1px solid #e2e8f0 !important;
+        color: #64748b !important;
+    }
+
+    /* Admonitions */
+    .admonition {
+        page-break-inside: avoid;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 }
 
@@ -30,32 +168,27 @@
     print-color-adjust: exact !important;
 }
 
-/* Ensure colors print correctly */
 #pdf-export-container * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
 }
 
-/* Remove interactive elements */
 #pdf-export-container .copy-code-btn,
 #pdf-export-container button,
 #pdf-export-container input {
     display: none !important;
 }
 
-/* Code blocks */
 #pdf-export-container pre {
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow: visible;
 }
 
-/* Math equations */
 #pdf-export-container .katex-display {
     margin: 1em 0;
 }
 
-/* Tables */
 #pdf-export-container table {
     page-break-inside: auto;
 }
@@ -65,7 +198,6 @@
     break-inside: avoid;
 }
 
-/* Diagrams */
 #pdf-export-container .mermaid svg {
     max-width: 100%;
     height: auto;
@@ -76,12 +208,10 @@
     margin: 1em auto;
 }
 
-/* Links */
 #pdf-export-container a {
     text-decoration: none;
 }
 
-/* Blockquotes */
 #pdf-export-container blockquote {
     page-break-inside: avoid;
 }

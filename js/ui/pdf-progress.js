@@ -59,16 +59,31 @@ function showError(message) {
     const content = progressModal?.querySelector('.pdf-progress-content');
     if (!content) return;
 
-    content.innerHTML = `
-        <div class="pdf-progress-icon error">
-            <i data-lucide="alert-circle" class="w-8 h-8 text-red-400"></i>
-        </div>
-        <div class="pdf-progress-title error">Export Failed</div>
-        <div class="pdf-progress-error">${message}</div>
-        <button class="pdf-progress-close" onclick="this.closest('#pdf-progress-modal').remove()">
-            Close
-        </button>
-    `;
+    content.innerHTML = '';
+
+    const iconWrap = document.createElement('div');
+    iconWrap.className = 'pdf-progress-icon error';
+    iconWrap.innerHTML = '<i data-lucide="alert-circle" class="w-8 h-8 text-red-400"></i>';
+
+    const title = document.createElement('div');
+    title.className = 'pdf-progress-title error';
+    title.textContent = 'Export Failed';
+
+    const error = document.createElement('div');
+    error.className = 'pdf-progress-error';
+    error.textContent = message || 'PDF export failed unexpectedly.';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'pdf-progress-close';
+    closeBtn.type = 'button';
+    closeBtn.textContent = 'Close';
+    closeBtn.addEventListener('click', hideProgress);
+
+    content.appendChild(iconWrap);
+    content.appendChild(title);
+    content.appendChild(error);
+    content.appendChild(closeBtn);
+
     if (window.lucide) window.lucide.createIcons();
 }
 

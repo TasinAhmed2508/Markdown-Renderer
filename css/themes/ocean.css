@@ -1,0 +1,239 @@
+/* ============================================
+   OCEAN THEME - Cool Blue Tones
+   ============================================ */
+
+/* CSS Variables for Ocean Mode */
+[data-theme="ocean"] {
+    --bg-primary: #0a0a1a;
+    --bg-secondary: #0d1525;
+    --bg-tertiary: #111d30;
+    --text-primary: #d0e8fd;
+    --text-secondary: #a8c8e8;
+    --text-muted: #607898;
+    --border-color: rgba(74, 158, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Body & Background */
+[data-theme="ocean"] body {
+    background: linear-gradient(135deg, #0a0a1a, #0d1525);
+    color: #d0e8fd;
+}
+
+[data-theme="ocean"] #canvas-container {
+    opacity: 0.2;
+    filter: saturate(1.1) hue-rotate(20deg);
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+[data-theme="ocean"] #navbar {
+    background: rgba(10, 10, 26, 0.85) !important;
+    border-bottom: 1px solid rgba(74, 158, 255, 0.15);
+    backdrop-filter: blur(12px);
+}
+
+[data-theme="ocean"] #navbar .text-white {
+    color: #d0e8fd !important;
+}
+
+[data-theme="ocean"] #navbar svg {
+    color: #4a9eff;
+}
+
+/* Metal Buttons in Navbar */
+[data-theme="ocean"] .metal-btn {
+    background: linear-gradient(to bottom, #111d30, #0d1525) !important;
+    color: #d0e8fd !important;
+    border-color: rgba(74, 158, 255, 0.2) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="ocean"] .metal-btn:hover {
+    background: linear-gradient(to bottom, #162640, #111d30) !important;
+    color: #fff !important;
+}
+
+/* ============================================
+   GLASS PANES
+   ============================================ */
+[data-theme="ocean"] .glass-pane {
+    background: rgba(10, 10, 26, 0.75) !important;
+    border-color: rgba(74, 158, 255, 0.12) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Window Chrome Header */
+[data-theme="ocean"] .window-chrome,
+[data-theme="ocean"] #window-chrome {
+    background: rgba(13, 21, 37, 0.95) !important;
+}
+
+[data-theme="ocean"] .window-chrome .text-xs {
+    color: #607898 !important;
+}
+
+/* ============================================
+   EDITOR PANE
+   ============================================ */
+[data-theme="ocean"] #markdown-input {
+    color: #d0e8fd !important;
+    background: transparent !important;
+    caret-color: #4a9eff;
+}
+
+[data-theme="ocean"] #markdown-input::placeholder {
+    color: #607898;
+}
+
+/* Line Numbers */
+[data-theme="ocean"] #line-numbers {
+    color: #607898 !important;
+    background: transparent !important;
+    border-right-color: rgba(74, 158, 255, 0.1) !important;
+}
+
+/* Editor Toolbar */
+[data-theme="ocean"] .editor-toolbar {
+    background: rgba(13, 21, 37, 0.9);
+    border-bottom-color: rgba(74, 158, 255, 0.1);
+}
+
+[data-theme="ocean"] .editor-toolbar button {
+    color: #a8c8e8;
+}
+
+[data-theme="ocean"] .editor-toolbar button:hover {
+    background: rgba(74, 158, 255, 0.15);
+    color: #4a9eff;
+}
+
+/* ============================================
+   PREVIEW PANE
+   ============================================ */
+[data-theme="ocean"] #canvas {
+    color: #d0e8fd !important;
+    background: rgba(10, 10, 26, 0.9) !important;
+}
+
+/* ============================================
+   STATUS BAR
+   ============================================ */
+[data-theme="ocean"] .flex.items-center.gap-4.text-xs {
+    color: #607898 !important;
+}
+
+[data-theme="ocean"] [id*="word-count"],
+[data-theme="ocean"] [id*="read-time"] {
+    color: #607898 !important;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+[data-theme="ocean"] .markdown-body table {
+    background: rgba(13, 21, 37, 0.6);
+    border-color: rgba(74, 158, 255, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="ocean"] .markdown-body thead {
+    background: linear-gradient(135deg, #111d30, #0d1525);
+}
+
+[data-theme="ocean"] .markdown-body th {
+    color: #4a9eff;
+    border-color: rgba(74, 158, 255, 0.15);
+}
+
+[data-theme="ocean"] .markdown-body td {
+    color: #a8c8e8;
+    border-color: rgba(74, 158, 255, 0.08);
+}
+
+[data-theme="ocean"] .markdown-body tbody tr:hover {
+    background: rgba(74, 158, 255, 0.06);
+}
+
+/* ============================================
+   CODE BLOCKS
+   ============================================ */
+[data-theme="ocean"] pre {
+    background: #0a0f1f !important;
+    border: 1px solid rgba(74, 158, 255, 0.12);
+}
+
+[data-theme="ocean"] code {
+    background: rgba(74, 158, 255, 0.1) !important;
+    color: #4a9eff !important;
+}
+
+[data-theme="ocean"] pre code {
+    color: #d0e8fd !important;
+}
+
+/* ============================================
+   MERMAID DIAGRAMS
+   ============================================ */
+[data-theme="ocean"] .mermaid {
+    background: linear-gradient(135deg, #0a0f1f, #0d1525) !important;
+    border-color: rgba(74, 158, 255, 0.12) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   BLOCKQUOTES
+   ============================================ */
+[data-theme="ocean"] blockquote {
+    background: rgba(74, 158, 255, 0.06);
+    border-left-color: #2196f3;
+    color: #a8c8e8;
+}
+
+/* ============================================
+   SCROLLBARS
+   ============================================ */
+[data-theme="ocean"] ::-webkit-scrollbar-track {
+    background: #0a0a1a;
+}
+
+[data-theme="ocean"] ::-webkit-scrollbar-thumb {
+    background: #1a2a45;
+    border-radius: 4px;
+}
+
+[data-theme="ocean"] ::-webkit-scrollbar-thumb:hover {
+    background: #253a5a;
+}
+
+/* ============================================
+   THEME SWATCHES
+   ============================================ */
+[data-theme="ocean"] .swatch {
+    border-color: rgba(74, 158, 255, 0.2) !important;
+}
+
+[data-theme="ocean"] .swatch.active {
+    border-color: #4a9eff !important;
+}
+
+/* ============================================
+   EXPORT/DROPDOWN MENUS
+   ============================================ */
+[data-theme="ocean"] #export-menu,
+[data-theme="ocean"] .dropdown-menu {
+    background: rgba(13, 21, 37, 0.98) !important;
+    border-color: rgba(74, 158, 255, 0.15) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="ocean"] #export-menu button,
+[data-theme="ocean"] .dropdown-menu button {
+    color: #d0e8fd;
+}
+
+[data-theme="ocean"] #export-menu button:hover,
+[data-theme="ocean"] .dropdown-menu button:hover {
+    background: rgba(74, 158, 255, 0.1);
+}

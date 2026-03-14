@@ -17,11 +17,12 @@ export async function exportPNG() {
     const originalContent = btn.innerHTML;
     showLoading(btn);
 
+    let clone = null;
     try {
         const element = elements.windowChrome;
         if (!element) throw new Error('Preview element not found');
 
-        const clone = element.cloneNode(true);
+        clone = element.cloneNode(true);
         setupClone(clone, element);
         document.body.appendChild(clone);
         await sleep(100);
@@ -35,8 +36,6 @@ export async function exportPNG() {
             scrollY: -window.scrollY
         });
 
-        document.body.removeChild(clone);
-
         const link = document.createElement('a');
         link.download = `TA-RenderX-${timestamp()}.png`;
         link.href = canvas.toDataURL('image/png', 1.0);
@@ -44,8 +43,10 @@ export async function exportPNG() {
 
     } catch (err) {
         console.error('PNG Export failed:', err);
-        alert('Failed to export PNG.');
     } finally {
+        if (clone && clone.parentNode) {
+            clone.parentNode.removeChild(clone);
+        }
         resetButton(btn, originalContent);
     }
 }

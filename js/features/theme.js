@@ -2,7 +2,9 @@ import { state, setState } from '../core/state.js';
 import { elements } from '../ui/dom.js';
 
 export function initThemes() {
-    // Initialize swatches
+    const swatchContainer = elements.themeSwatches;
+    if (!swatchContainer) return;
+
     state.themes.forEach(theme => {
         const swatch = document.createElement('div');
         swatch.className = `swatch ${state.theme === theme.id ? 'active' : ''}`;
@@ -13,7 +15,7 @@ export function initThemes() {
             setState({ theme: theme.id });
         });
 
-        elements.themeSwatches.appendChild(swatch);
+        swatchContainer.appendChild(swatch);
     });
 
     // Initialize toggle button

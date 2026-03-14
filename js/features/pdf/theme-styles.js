@@ -9,7 +9,9 @@ import { PAGE, FONTS, getThemeColors } from './config.js';
  * Detect if light theme is active
  */
 export function isLightMode() {
-    return document.body.getAttribute('data-theme') === 'light';
+    const bodyTheme = document.body?.getAttribute('data-theme');
+    const rootTheme = document.documentElement?.getAttribute('data-theme');
+    return (bodyTheme || rootTheme) === 'light';
 }
 
 /**
@@ -41,11 +43,14 @@ export function generateBodyStyles(isLight) {
     const c = getThemeColors(isLight);
 
     return {
-        backgroundColor: 'transparent',
+        backgroundColor: c.bg,
         color: c.text,
         width: '100%',
         height: 'auto',
-        overflow: 'visible'
+        overflow: 'visible',
+        boxSizing: 'border-box',
+        borderRadius: '12px',
+        padding: '32px'
     };
 }
 

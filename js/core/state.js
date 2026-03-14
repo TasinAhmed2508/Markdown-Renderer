@@ -15,16 +15,31 @@ export const state = {
 export const listeners = [];
 
 export function setState(newState) {
+    if (!newState || typeof newState !== 'object') {
+        console.warn('setState: invalid input, expected an object');
+        return;
+    }
     Object.assign(state, newState);
-    listeners.forEach(fn => {
+    for (let i = 0; i < listeners.length; i++) {
         try {
-            fn(state);
+            listeners[i](state);
         } catch (err) {
-            console.error('State listener error:', err);
+            console.error(`State listener [${i}] error:`, err);
         }
-    });
+    }
 }
 
+/**
+ * Subscribe to state changes. Returns an unsubscribe function.
+ */
 export function subscribe(fn) {
+    if (typeof fn !== 'function') {
+        console.warn('subscribe: expected a function');
+        return () => {};
+    }
     listeners.push(fn);
+    return () => {
+        const idx = listeners.indexOf(fn);
+        if (idx !== -1) listeners.splice(idx, 1);
+    };
 }

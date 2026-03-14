@@ -34,10 +34,12 @@ export function renderCharts(element) {
 }
 
 function handleChartError(block, err) {
+    if (!block) return;
     block.style.border = '1px dashed #ef4444';
     block.style.color = '#ef4444';
     const msg = document.createElement('div');
     msg.className = 'text-red-500 text-xs mt-2';
     msg.textContent = `Chart Error: ${err.message}`;
-    block.parentElement.appendChild(msg);
+    const parent = block.parentElement;
+    if (parent) parent.appendChild(msg);
 }

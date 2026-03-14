@@ -31,12 +31,22 @@ function processMermaidSVGs(clone) {
                 svg.setAttribute('height', rect.height || 300);
             }
 
+            // Keep diagram proportions while making print layout compact
+            svg.style.maxWidth = '100%';
+            svg.style.height = 'auto';
+
             // Style the container
             Object.assign(el.style, {
                 display: 'block',
-                margin: '1.5em auto',
+                margin: '1.1em auto',
                 textAlign: 'center',
-                overflow: 'visible'
+                overflow: 'visible',
+                padding: '12px',
+                background: 'transparent',
+                border: '1px solid rgba(148, 163, 184, 0.25)',
+                borderRadius: '8px',
+                breakInside: 'avoid',
+                pageBreakInside: 'avoid'
             });
         }
     });
@@ -54,21 +64,31 @@ function processCanvasElements(sourceEl, clone) {
         if (!cloneCanvas) return;
 
         try {
+            const rect = orig.getBoundingClientRect();
+            const width = orig.width || Math.round(rect.width);
+            const height = orig.height || Math.round(rect.height);
+
             // Set explicit dimensions
-            cloneCanvas.width = orig.width;
-            cloneCanvas.height = orig.height;
+            if (width > 0) cloneCanvas.width = width;
+            if (height > 0) cloneCanvas.height = height;
+            if (width > 0) cloneCanvas.style.width = `${width}px`;
+            if (height > 0) cloneCanvas.style.height = `${height}px`;
 
             // Copy canvas content
             const ctx = cloneCanvas.getContext('2d');
+            if (!ctx) return;
+            ctx.clearRect(0, 0, cloneCanvas.width, cloneCanvas.height);
             ctx.drawImage(orig, 0, 0);
 
             // Style container
             const container = cloneCanvas.closest('.chart-container');
             if (container) {
                 Object.assign(container.style, {
-                    margin: '1.5em auto',
-                    padding: '1rem',
-                    maxWidth: '100%'
+                    margin: '1.1em auto',
+                    padding: '0.75rem',
+                    maxWidth: '100%',
+                    breakInside: 'avoid',
+                    pageBreakInside: 'avoid'
                 });
             }
         } catch (e) {

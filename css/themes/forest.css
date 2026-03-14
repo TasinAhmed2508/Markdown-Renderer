@@ -1,0 +1,239 @@
+/* ============================================
+   FOREST THEME - Green Tones
+   ============================================ */
+
+/* CSS Variables for Forest Mode */
+[data-theme="forest"] {
+    --bg-primary: #0a1a0a;
+    --bg-secondary: #0d1f0d;
+    --bg-tertiary: #122a12;
+    --text-primary: #d0fdd0;
+    --text-secondary: #a8d8a8;
+    --text-muted: #608060;
+    --border-color: rgba(76, 175, 80, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Body & Background */
+[data-theme="forest"] body {
+    background: linear-gradient(135deg, #0a1a0a, #0d1f0d);
+    color: #d0fdd0;
+}
+
+[data-theme="forest"] #canvas-container {
+    opacity: 0.2;
+    filter: saturate(1.1) hue-rotate(80deg);
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+[data-theme="forest"] #navbar {
+    background: rgba(10, 26, 10, 0.85) !important;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.15);
+    backdrop-filter: blur(12px);
+}
+
+[data-theme="forest"] #navbar .text-white {
+    color: #d0fdd0 !important;
+}
+
+[data-theme="forest"] #navbar svg {
+    color: #4caf50;
+}
+
+/* Metal Buttons in Navbar */
+[data-theme="forest"] .metal-btn {
+    background: linear-gradient(to bottom, #122a12, #0d1f0d) !important;
+    color: #d0fdd0 !important;
+    border-color: rgba(76, 175, 80, 0.2) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="forest"] .metal-btn:hover {
+    background: linear-gradient(to bottom, #1a3a1a, #122a12) !important;
+    color: #fff !important;
+}
+
+/* ============================================
+   GLASS PANES
+   ============================================ */
+[data-theme="forest"] .glass-pane {
+    background: rgba(10, 26, 10, 0.75) !important;
+    border-color: rgba(76, 175, 80, 0.12) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Window Chrome Header */
+[data-theme="forest"] .window-chrome,
+[data-theme="forest"] #window-chrome {
+    background: rgba(13, 31, 13, 0.95) !important;
+}
+
+[data-theme="forest"] .window-chrome .text-xs {
+    color: #608060 !important;
+}
+
+/* ============================================
+   EDITOR PANE
+   ============================================ */
+[data-theme="forest"] #markdown-input {
+    color: #d0fdd0 !important;
+    background: transparent !important;
+    caret-color: #4caf50;
+}
+
+[data-theme="forest"] #markdown-input::placeholder {
+    color: #608060;
+}
+
+/* Line Numbers */
+[data-theme="forest"] #line-numbers {
+    color: #608060 !important;
+    background: transparent !important;
+    border-right-color: rgba(76, 175, 80, 0.1) !important;
+}
+
+/* Editor Toolbar */
+[data-theme="forest"] .editor-toolbar {
+    background: rgba(13, 31, 13, 0.9);
+    border-bottom-color: rgba(76, 175, 80, 0.1);
+}
+
+[data-theme="forest"] .editor-toolbar button {
+    color: #a8d8a8;
+}
+
+[data-theme="forest"] .editor-toolbar button:hover {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4caf50;
+}
+
+/* ============================================
+   PREVIEW PANE
+   ============================================ */
+[data-theme="forest"] #canvas {
+    color: #d0fdd0 !important;
+    background: rgba(10, 26, 10, 0.9) !important;
+}
+
+/* ============================================
+   STATUS BAR
+   ============================================ */
+[data-theme="forest"] .flex.items-center.gap-4.text-xs {
+    color: #608060 !important;
+}
+
+[data-theme="forest"] [id*="word-count"],
+[data-theme="forest"] [id*="read-time"] {
+    color: #608060 !important;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+[data-theme="forest"] .markdown-body table {
+    background: rgba(13, 31, 13, 0.6);
+    border-color: rgba(76, 175, 80, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="forest"] .markdown-body thead {
+    background: linear-gradient(135deg, #122a12, #0d1f0d);
+}
+
+[data-theme="forest"] .markdown-body th {
+    color: #4caf50;
+    border-color: rgba(76, 175, 80, 0.15);
+}
+
+[data-theme="forest"] .markdown-body td {
+    color: #a8d8a8;
+    border-color: rgba(76, 175, 80, 0.08);
+}
+
+[data-theme="forest"] .markdown-body tbody tr:hover {
+    background: rgba(76, 175, 80, 0.06);
+}
+
+/* ============================================
+   CODE BLOCKS
+   ============================================ */
+[data-theme="forest"] pre {
+    background: #0a150a !important;
+    border: 1px solid rgba(76, 175, 80, 0.12);
+}
+
+[data-theme="forest"] code {
+    background: rgba(76, 175, 80, 0.1) !important;
+    color: #28c840 !important;
+}
+
+[data-theme="forest"] pre code {
+    color: #d0fdd0 !important;
+}
+
+/* ============================================
+   MERMAID DIAGRAMS
+   ============================================ */
+[data-theme="forest"] .mermaid {
+    background: linear-gradient(135deg, #0a150a, #0d1f0d) !important;
+    border-color: rgba(76, 175, 80, 0.12) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   BLOCKQUOTES
+   ============================================ */
+[data-theme="forest"] blockquote {
+    background: rgba(76, 175, 80, 0.06);
+    border-left-color: #28c840;
+    color: #a8d8a8;
+}
+
+/* ============================================
+   SCROLLBARS
+   ============================================ */
+[data-theme="forest"] ::-webkit-scrollbar-track {
+    background: #0a1a0a;
+}
+
+[data-theme="forest"] ::-webkit-scrollbar-thumb {
+    background: #1a3a1a;
+    border-radius: 4px;
+}
+
+[data-theme="forest"] ::-webkit-scrollbar-thumb:hover {
+    background: #254a25;
+}
+
+/* ============================================
+   THEME SWATCHES
+   ============================================ */
+[data-theme="forest"] .swatch {
+    border-color: rgba(76, 175, 80, 0.2) !important;
+}
+
+[data-theme="forest"] .swatch.active {
+    border-color: #4caf50 !important;
+}
+
+/* ============================================
+   EXPORT/DROPDOWN MENUS
+   ============================================ */
+[data-theme="forest"] #export-menu,
+[data-theme="forest"] .dropdown-menu {
+    background: rgba(13, 31, 13, 0.98) !important;
+    border-color: rgba(76, 175, 80, 0.15) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="forest"] #export-menu button,
+[data-theme="forest"] .dropdown-menu button {
+    color: #d0fdd0;
+}
+
+[data-theme="forest"] #export-menu button:hover,
+[data-theme="forest"] .dropdown-menu button:hover {
+    background: rgba(76, 175, 80, 0.1);
+}

@@ -4,6 +4,7 @@
  */
 
 import { elements } from '../ui/dom.js';
+import { getLatestRenderPromise } from '../ui/events.js';
 import { generatePDF } from './pdf/index.js';
 import { exportPNG } from './export-png.js';
 import { exportHTML } from './export-html.js';
@@ -17,7 +18,10 @@ export function initExport() {
 
     // PNG Export
     if (elements.btnExportPng) {
-        elements.btnExportPng.addEventListener('click', exportPNG);
+        elements.btnExportPng.addEventListener('click', () => {
+            closeExportMenu();
+            exportPNG();
+        });
     }
 
     // PDF Export
@@ -28,6 +32,7 @@ export function initExport() {
     // HTML Export
     if (elements.btnExportHtml) {
         elements.btnExportHtml.addEventListener('click', () => {
+            closeExportMenu();
             exportHTML(elements.btnExportHtml);
         });
     }
@@ -65,10 +70,19 @@ async function handlePDFExport() {
     try {
         const content = document.getElementById('markdown-output');
         if (!content) throw new Error('No content to export');
+
+        closeExportMenu();
+        await getLatestRenderPromise();
         await generatePDF(content, `TA-RenderX-${timestamp()}.pdf`);
     } catch (err) {
         console.error('PDF Export failed:', err);
     }
+}
+
+function closeExportMenu() {
+    const menu = elements.exportMenu;
+    if (!menu) return;
+    menu.classList.add('opacity-0', 'invisible', 'scale-95');
 }
 
 function timestamp() {

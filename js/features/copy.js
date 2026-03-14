@@ -1,7 +1,16 @@
 import { elements } from '../ui/dom.js';
 
 export function initCopy() {
-    elements.btnCopy.addEventListener('click', () => {
+    const btn = elements.btnCopy;
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+        const windowChrome = elements.windowChrome;
+        if (!windowChrome) {
+            console.warn('Copy: window chrome element not found');
+            return;
+        }
+
         // 1. Get all stylesheets and inline styles
         const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
             .map(s => s.outerHTML)
@@ -11,7 +20,7 @@ export function initCopy() {
         const tailwindScript = '<script src="https://cdn.tailwindcss.com"></script>';
         
         // 3. Get the actual window chrome content
-        const content = elements.windowChrome.outerHTML;
+        const content = windowChrome.outerHTML;
         
         // 4. Wrap everything in a container with a dark background for context
         const fullHtml = `<!-- AnoAI RenderX Export -->
@@ -27,14 +36,15 @@ export function initCopy() {
 </div>`;
 
         navigator.clipboard.writeText(fullHtml).then(() => {
-            const originalText = elements.btnCopy.innerHTML;
-            elements.btnCopy.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Copied!';
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Copied!';
             
             setTimeout(() => {
-                elements.btnCopy.innerHTML = originalText;
-                // Re-init icon if lucide is available
+                btn.innerHTML = originalText;
                 if (window.lucide) window.lucide.createIcons();
             }, 2000);
+        }).catch((err) => {
+            console.error('Clipboard write failed:', err);
         });
     });
 }

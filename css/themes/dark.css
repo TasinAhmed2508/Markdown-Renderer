@@ -1,0 +1,239 @@
+/* ============================================
+   TRUE DARK / AMOLED THEME
+   ============================================ */
+
+/* CSS Variables for Dark Mode */
+[data-theme="dark"] {
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-tertiary: #111111;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --text-muted: #606060;
+    --border-color: rgba(255, 255, 255, 0.06);
+    --shadow-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Body & Background */
+[data-theme="dark"] body {
+    background: #000000;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] #canvas-container {
+    opacity: 0.08;
+    filter: saturate(0.3) brightness(0.5);
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+[data-theme="dark"] #navbar {
+    background: rgba(0, 0, 0, 0.9) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+}
+
+[data-theme="dark"] #navbar .text-white {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] #navbar svg {
+    color: #6366f1;
+}
+
+/* Metal Buttons in Navbar */
+[data-theme="dark"] .metal-btn {
+    background: linear-gradient(to bottom, #111111, #0a0a0a) !important;
+    color: #e0e0e0 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .metal-btn:hover {
+    background: linear-gradient(to bottom, #1a1a1a, #111111) !important;
+    color: #fff !important;
+}
+
+/* ============================================
+   GLASS PANES
+   ============================================ */
+[data-theme="dark"] .glass-pane {
+    background: rgba(0, 0, 0, 0.85) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+/* Window Chrome Header */
+[data-theme="dark"] .window-chrome,
+[data-theme="dark"] #window-chrome {
+    background: rgba(10, 10, 10, 0.98) !important;
+}
+
+[data-theme="dark"] .window-chrome .text-xs {
+    color: #606060 !important;
+}
+
+/* ============================================
+   EDITOR PANE
+   ============================================ */
+[data-theme="dark"] #markdown-input {
+    color: #e0e0e0 !important;
+    background: transparent !important;
+    caret-color: #6366f1;
+}
+
+[data-theme="dark"] #markdown-input::placeholder {
+    color: #606060;
+}
+
+/* Line Numbers */
+[data-theme="dark"] #line-numbers {
+    color: #404040 !important;
+    background: transparent !important;
+    border-right-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Editor Toolbar */
+[data-theme="dark"] .editor-toolbar {
+    background: rgba(10, 10, 10, 0.95);
+    border-bottom-color: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="dark"] .editor-toolbar button {
+    color: #a0a0a0;
+}
+
+[data-theme="dark"] .editor-toolbar button:hover {
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+}
+
+/* ============================================
+   PREVIEW PANE
+   ============================================ */
+[data-theme="dark"] #canvas {
+    color: #e0e0e0 !important;
+    background: rgba(0, 0, 0, 0.95) !important;
+}
+
+/* ============================================
+   STATUS BAR
+   ============================================ */
+[data-theme="dark"] .flex.items-center.gap-4.text-xs {
+    color: #606060 !important;
+}
+
+[data-theme="dark"] [id*="word-count"],
+[data-theme="dark"] [id*="read-time"] {
+    color: #606060 !important;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+[data-theme="dark"] .markdown-body table {
+    background: rgba(10, 10, 10, 0.6);
+    border-color: rgba(255, 255, 255, 0.06);
+    box-shadow: none;
+}
+
+[data-theme="dark"] .markdown-body thead {
+    background: linear-gradient(135deg, #111111, #0a0a0a);
+}
+
+[data-theme="dark"] .markdown-body th {
+    color: #6366f1;
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .markdown-body td {
+    color: #a0a0a0;
+    border-color: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="dark"] .markdown-body tbody tr:hover {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+/* ============================================
+   CODE BLOCKS
+   ============================================ */
+[data-theme="dark"] pre {
+    background: #0a0a0a !important;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] code {
+    background: rgba(99, 102, 241, 0.08) !important;
+    color: #6366f1 !important;
+}
+
+[data-theme="dark"] pre code {
+    color: #e0e0e0 !important;
+}
+
+/* ============================================
+   MERMAID DIAGRAMS
+   ============================================ */
+[data-theme="dark"] .mermaid {
+    background: linear-gradient(135deg, #0a0a0a, #000000) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+    box-shadow: none;
+}
+
+/* ============================================
+   BLOCKQUOTES
+   ============================================ */
+[data-theme="dark"] blockquote {
+    background: rgba(99, 102, 241, 0.04);
+    border-left-color: #6366f1;
+    color: #a0a0a0;
+}
+
+/* ============================================
+   SCROLLBARS
+   ============================================ */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: #000000;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: #252525;
+}
+
+/* ============================================
+   THEME SWATCHES
+   ============================================ */
+[data-theme="dark"] .swatch {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .swatch.active {
+    border-color: #6366f1 !important;
+}
+
+/* ============================================
+   EXPORT/DROPDOWN MENUS
+   ============================================ */
+[data-theme="dark"] #export-menu,
+[data-theme="dark"] .dropdown-menu {
+    background: rgba(10, 10, 10, 0.98) !important;
+    border-color: rgba(255, 255, 255, 0.06) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] #export-menu button,
+[data-theme="dark"] .dropdown-menu button {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] #export-menu button:hover,
+[data-theme="dark"] .dropdown-menu button:hover {
+    background: rgba(99, 102, 241, 0.08);
+}
