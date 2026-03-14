@@ -86,6 +86,20 @@ export class MathHandler {
         // 4. Inline Math \(...\)
         text = replace(/\\\(([\s\S]+?)\\\)/g, 'inline');
 
+        // 4b. Bare-paren inline math (ChatGPT format)
+        // Matches (...) containing LaTeX commands or math variables like C_1
+        text = text.replace(/\(([^()]*(?:\([^()]*\)[^()]*)*)\)/g, (match, content) => {
+            const trimmed = content.trim();
+            if (!trimmed) return match;
+            if (/MATHBLOCK|CODEBLOCK/.test(trimmed)) return match;
+            const hasCmd = /\\[a-zA-Z]{2,}/.test(trimmed);
+            const isMathVar = /^[A-Za-z][_^]\{?[A-Za-z0-9,]+\}?$/.test(trimmed);
+            if (!hasCmd && !isMathVar) return match;
+            const id = this.mathBlocks.length;
+            this.mathBlocks.push({ id, content: `\\(${trimmed}\\)`, type: 'inline' });
+            return `<!--MATHBLOCK${id}PLACEHOLDER-->`;
+        });
+
         // 5. Inline Math $...$ (single line, no newlines inside)
         // Keep valid math like $x_1$, but ignore obvious currency-like tokens.
         text = text.replace(/(^|[^\\])\$([^\n$]+?)\$/gm, (match, prefix, content) => {
