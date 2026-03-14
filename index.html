@@ -480,6 +480,58 @@
 
     <!-- Load Main Logic -->
     <script type="module" src="js/main.js"></script>
+    <!-- Extension Install Banner -->
+    <div id="ext-banner" class="hidden fixed top-0 left-0 right-0 z-[9999]" style="pointer-events:none;">
+        <div style="pointer-events:auto;max-width:720px;margin:16px auto;padding:14px 20px;background:linear-gradient(135deg,rgba(15,23,42,0.95),rgba(30,27,75,0.95));border:1px solid rgba(139,92,246,0.3);border-radius:14px;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,0.4);display:flex;align-items:center;gap:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+            <span style="font-size:28px;flex-shrink:0;">🧩</span>
+            <div style="flex:1;min-width:0;">
+                <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:3px;">ChatGPT Extractor Extension</div>
+                <div style="font-size:12px;color:#94a3b8;line-height:1.4;">One click to extract all ChatGPT responses with math &amp; code — auto-rendered here instantly.</div>
+            </div>
+            <a id="ext-install-btn" href="https://github.com/AbirDey2002/Markdown-Renderer/tree/main/extension" target="_blank"
+                style="flex-shrink:0;padding:8px 18px;background:linear-gradient(135deg,#0ea5e9,#8b5cf6);color:#fff;font-size:13px;font-weight:600;border-radius:8px;text-decoration:none;white-space:nowrap;transition:opacity 0.2s;"
+                onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                Install Extension
+            </a>
+            <button id="ext-dismiss" style="flex-shrink:0;background:none;border:none;color:#64748b;font-size:20px;cursor:pointer;padding:4px 6px;line-height:1;transition:color 0.2s;"
+                onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='#64748b'"
+                title="Dismiss">&times;</button>
+        </div>
+    </div>
+
+    <script>
+        // Show extension install banner if not dismissed and extension not detected
+        (function() {
+            if (localStorage.getItem('ext_banner_dismissed')) return;
+
+            // Check if extension is already installed by looking for its marker
+            // The extension sets this when it injects content
+            if (window.__RENDERX_EXT_INSTALLED) return;
+
+            const banner = document.getElementById('ext-banner');
+            // Show after a short delay so it doesn't flash during page load
+            setTimeout(() => {
+                banner.classList.remove('hidden');
+                banner.style.animation = 'extSlideIn 0.4s ease-out';
+            }, 1500);
+
+            document.getElementById('ext-dismiss').addEventListener('click', () => {
+                banner.style.animation = 'extSlideOut 0.3s ease-in forwards';
+                setTimeout(() => banner.remove(), 300);
+                localStorage.setItem('ext_banner_dismissed', '1');
+            });
+
+            // Also hide if extension installs and pastes content
+            document.getElementById('ext-install-btn').addEventListener('click', () => {
+                localStorage.setItem('ext_banner_dismissed', '1');
+            });
+        })();
+    </script>
+    <style>
+        @keyframes extSlideIn { from { opacity:0; transform:translateY(-100%); } to { opacity:1; transform:translateY(0); } }
+        @keyframes extSlideOut { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(-100%); } }
+    </style>
+
     <script>
         if ('serviceWorker' in navigator) {
             // Force-clear old service worker caches on version mismatch
