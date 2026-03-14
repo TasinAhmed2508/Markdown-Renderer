@@ -482,7 +482,24 @@
     <script type="module" src="js/main.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').catch(() => {});
+            // Force-clear old service worker caches on version mismatch
+            const APP_VERSION = 'v3';
+            if (localStorage.getItem('app_version') !== APP_VERSION) {
+                caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(() => {
+                    navigator.serviceWorker.getRegistrations().then(regs => {
+                        Promise.all(regs.map(r => r.unregister())).then(() => {
+                            localStorage.setItem('app_version', APP_VERSION);
+                            window.location.reload();
+                        });
+                    });
+                });
+            } else {
+                let refreshing = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!refreshing) { refreshing = true; window.location.reload(); }
+                });
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
         }
     </script>
 </body>

@@ -77,7 +77,12 @@ export class MathHandler {
         // Matches: optional indent + [ + optional whitespace + newline + content + newline + optional indent + ]
         text = text.replace(/^[ \t]*\[[ \t]*\n([\s\S]+?)\n[ \t]*\][ \t]*$/gm, (match, content) => {
             // Only convert if content looks like math (LaTeX commands, operators, etc.)
-            if (!/\\[a-zA-Z]/.test(content) && !/[_^=]/.test(content) && !/\d/.test(content)) return match;
+            const hasCmds = /\\[a-zA-Z]/.test(content);
+            const hasMathOps = /[_^=]/.test(content);
+            const hasDigits = /\d/.test(content);
+            // Short variable expressions: letter combos with math punctuation (e.g. -t,dt)
+            const hasMathExpr = /^[\s\-+*/=,;()\w\\{}^_.]+$/.test(content.trim()) && /[a-zA-Z]/.test(content) && /[-+*/,=]/.test(content);
+            if (!hasCmds && !hasMathOps && !hasDigits && !hasMathExpr) return match;
             const id = this.mathBlocks.length;
             this.mathBlocks.push({ id, content: `\\[${content.trim()}\\]`, type: 'display' });
             return `\n<!--MATHBLOCK${id}PLACEHOLDER-->\n`;
@@ -94,7 +99,9 @@ export class MathHandler {
             if (/MATHBLOCK|CODEBLOCK/.test(trimmed)) return match;
             const hasCmd = /\\[a-zA-Z]{2,}/.test(trimmed);
             const isMathVar = /^[A-Za-z][_^]\{?[A-Za-z0-9,]+\}?$/.test(trimmed);
-            if (!hasCmd && !isMathVar) return match;
+            // Expressions with ^ or _ alongside letters (e.g. -yx^2,dy)
+            const hasMathNotation = /[_^]/.test(trimmed) && /[a-zA-Z]/.test(trimmed) && !/\s{2,}/.test(trimmed);
+            if (!hasCmd && !isMathVar && !hasMathNotation) return match;
             const id = this.mathBlocks.length;
             this.mathBlocks.push({ id, content: `\\(${trimmed}\\)`, type: 'inline' });
             return `<!--MATHBLOCK${id}PLACEHOLDER-->`;

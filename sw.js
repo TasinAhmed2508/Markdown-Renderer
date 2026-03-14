@@ -3,7 +3,7 @@
  * Cache-first for local assets, network-first for CDN resources
  */
 
-const CACHE_NAME = 'renderx-v1';
+const CACHE_NAME = 'renderx-v3';
 
 const APP_SHELL = [
     './',
@@ -49,7 +49,7 @@ self.addEventListener('install', (event) => {
     );
 });
 
-// Activate: clean up old caches
+// Activate: clean up old caches and force clients to reload
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((keys) => {
@@ -58,10 +58,16 @@ self.addEventListener('activate', (event) => {
                     .map((key) => caches.delete(key))
             );
         }).then(() => self.clients.claim())
+          .then(() => {
+              // Notify all clients to reload with fresh code
+              return self.clients.matchAll({ type: 'window' }).then(clients => {
+                  clients.forEach(client => client.navigate(client.url));
+              });
+          })
     );
 });
 
-// Fetch: cache-first for local, network-first for CDN
+// Fetch: network-first for local assets, network-first for CDN
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
@@ -79,22 +85,24 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Cache-first for local assets
+    // Network-first for local assets (always get fresh code, cache as offline fallback)
     event.respondWith(
-        caches.match(event.request).then((cached) => {
-            if (cached) return cached;
-            return fetch(event.request).then((response) => {
+        fetch(event.request)
+            .then((response) => {
                 if (response.ok) {
                     const clone = response.clone();
                     caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
                 }
                 return response;
-            });
-        }).catch(() => {
-            // Offline fallback for navigation
-            if (event.request.mode === 'navigate') {
-                return caches.match('./index.html');
-            }
-        })
+            })
+            .catch(() => {
+                return caches.match(event.request).then((cached) => {
+                    if (cached) return cached;
+                    // Offline fallback for navigation
+                    if (event.request.mode === 'navigate') {
+                        return caches.match('./index.html');
+                    }
+                });
+            })
     );
 });
