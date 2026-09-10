@@ -1,3 +1,3 @@
 export const icon = name => ({
-  plus:'＋', search:'⌕', settings:'⚙', activity:'◌', agents:'◎', context:'◇', merge:'⑂', home:'⌂', play:'▶', stop:'■', chevron:'⌄', folder:'▱'
+  plus:'＋', search:'⌕', settings:'⚙', activity:'◌', agents:'◎', context:'◇', merge:'⑂', home:'⌂', play:'▶', stop:'■', chevron:'⌄', folder:'▱', qa:'✓', impact:'⌁', architecture:'△', health:'♡', release:'⇧'
 }[name] || '•');

@@ -1,12 +1,15 @@
 import { icon } from './icons.js';
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const navButton = (state,id,label,iconName=id) => `<button class="nav-item ${state.view===id?'active':''}" data-view="${id}">${icon(iconName)}<span>${label}</span></button>`;
 
 export function sidebar(state) {
-  const nav = [['home','Home'],['activity','Activity'],['agents','Agents'],['context','Context'],['integration','Integration'],['qa','QA'],['settings','Settings']];
+  const primary=[['home','Home'],['activity','Activity'],['agents','Agents'],['context','Context'],['integration','Integration','merge'],['qa','QA']];
+  const advanced=[['impact','Impact'],['architecture','Architecture'],['health','Health'],['release','Release']];
   return `<aside class="sidebar"><div class="brand"><span class="brand-mark">◔</span><b>AI Coding Studio</b></div>
     <button class="new-task" data-action="new-task">${icon('plus')} New task</button>
-    <div class="nav-section">Workspace</div>${nav.map(([id,label])=>`<button class="nav-item ${state.view===id?'active':''}" data-view="${id}">${icon(id==='integration'?'merge':id)}<span>${label}</span></button>`).join('')}
+    <div class="nav-section">Workspace</div>${primary.map(x=>navButton(state,...x)).join('')}
+    <div class="nav-section">Advanced</div>${advanced.map(x=>navButton(state,...x)).join('')}${navButton(state,'settings','Settings')}
     <div class="nav-section">Projects</div><div class="project-list">${state.projects.map(p=>`<button class="project-item ${p.id===state.projectId?'active':''}" data-project="${p.id}">${icon('folder')}<span>${esc(p.name)}</span></button>`).join('')}</div>
     <div class="account"><div class="avatar">TA</div><div><b>Local workspace</b><small>${state.permissionMode}</small></div></div></aside>`;
 }
@@ -25,7 +28,7 @@ export function home(state) {
 }
 
 export function composer(state) {
-  return `<div class="composer"><textarea id="prompt" placeholder="Do anything">${esc(state.draft || '')}</textarea><div class="composer-foot"><div><button class="round">${icon('plus')}</button><button class="permission" data-action="permission">◉ ${state.permissionMode}</button></div><div><select id="routing">${['Automatic','Fast','Balanced','Best quality','Lowest cost'].map(x=>`<option ${x===state.routing?'selected':''}>${x}</option>`).join('')}</select><button class="send" data-action="run">${state.running?icon('stop'):icon('play')}</button></div></div></div>`;
+  return `<div class="composer"><textarea id="prompt" aria-label="Task instruction" placeholder="Do anything">${esc(state.draft || '')}</textarea><div class="composer-foot"><div><button class="round" aria-label="Add attachment">${icon('plus')}</button><button class="permission" data-action="permission">◉ ${state.permissionMode}</button></div><div><select id="routing" aria-label="Model routing">${['Automatic','Fast','Balanced','Best quality','Lowest cost'].map(x=>`<option ${x===state.routing?'selected':''}>${x}</option>`).join('')}</select><button class="send" aria-label="Run task" data-action="run">${state.running?icon('stop'):icon('play')}</button></div></div></div>`;
 }
 
 export function activity(state) {
@@ -46,7 +49,8 @@ export function integration(state) {
 }
 
 export function qa(state) {
-  return panel('Independent QA', 'Acceptance criteria mapped to current evidence', `<div class="stats"><div><b>${state.qaChecks.filter(x=>x.status==='passed').length}</b><small>Passed</small></div><div><b>${state.qaChecks.filter(x=>x.status==='failed').length}</b><small>Failed</small></div><div><b>${state.qaChecks.filter(x=>x.status==='not-run').length}</b><small>Not run</small></div></div><div class="task-table">${state.qaChecks.map(c=>`<div class="task-row"><span class="status ${c.status==='passed'?'succeeded':c.status==='failed'?'failed':'pending'}"></span><div><b>${esc(c.text)}</b><small>${esc(c.method)}</small></div><span class="task-state">${c.status}</span></div>`).join('')}</div><button class="primary" data-action="run-qa">Run independent checks</button>`);
+  const current=state.qaChecks.filter(x=>x.status==='passed').length;
+  return panel('Independent QA', 'Acceptance criteria mapped to current evidence; browser checks remain explicit until run.', `<div class="stats"><div><b>${current}</b><small>Passed</small></div><div><b>${state.qaChecks.filter(x=>x.status==='failed').length}</b><small>Failed</small></div><div><b>${state.qaChecks.filter(x=>x.status==='not-run').length}</b><small>Not run</small></div></div><div class="task-table">${state.qaChecks.map(c=>`<div class="task-row"><span class="status ${c.status==='passed'?'succeeded':c.status==='failed'?'failed':'pending'}"></span><div><b>${esc(c.text)}</b><small>${esc(c.method)}${c.evidence?` · ${esc(c.evidence.tool)} · ${esc(c.evidence.validity)}`:''}</small></div><span class="task-state">${c.status}</span></div>`).join('')}</div><button class="primary" data-action="run-qa">Run independent checks</button><div class="record"><b>Browser acceptance</b><span>Run npm run studio:test:e2e to create external Playwright evidence before treating the browser criterion as passed.</span></div>`);
 }
 
 export function settings(state) {

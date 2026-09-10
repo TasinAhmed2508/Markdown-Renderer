@@ -2,7 +2,8 @@
   "type": "module",
   "scripts": {
     "studio:start": "node ai-studio/dev-server.mjs",
-    "studio:test": "node --test ai-studio/tests/*.test.mjs"
+    "studio:test": "node --test ai-studio/tests/core.test.mjs ai-studio/tests/advanced.test.mjs",
+    "studio:test:e2e": "node ai-studio/tests/browser.test.mjs"
   },
   "devDependencies": {
     "playwright": "^1.58.2"

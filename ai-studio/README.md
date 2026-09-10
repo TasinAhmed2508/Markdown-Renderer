@@ -1,20 +1,17 @@
-# AI Coding Studio baseline (Phases 0-7)
+# AI Coding Studio baseline (Phases 0-9)
 
 This directory is a non-destructive integration inside the existing Markdown-Renderer repository. It implements the product shell and deterministic control-plane concepts from the AI Coding Studio PRD without replacing the existing renderer.
 
-## Run
+## Run and verify
 
 ```bash
+npm install
 npm run studio:start
-```
-
-Open `http://127.0.0.1:4173`.
-
-## Test
-
-```bash
 npm run studio:test
+npm run studio:test:e2e
 ```
+
+Open `http://127.0.0.1:4173` for the product shell. The e2e command starts its own server on port 4174 and runs a Chromium browser journey.
 
 ## Implemented baseline
 
@@ -26,6 +23,9 @@ npm run studio:test
 - Phase 5: repository hashing/indexing primitives, Context Fabric ledger, provenance and contract registry.
 - Phase 6: DAG validation, ready-work scheduling and bounded concurrency.
 - Phase 7: resource claims with fencing tokens, conflict-aware immutable integration candidates.
-- Phase 8: acceptance/evidence evaluation primitives are present, but browser automation and protected acceptance suites remain follow-up work.
+- Phase 8: evidence registry, validity/invalidation, protected acceptance-test policy, explicit Playwright browser journey, and CI validation workflow.
+- Phase 9: Change Impact Explorer, Architecture Lab, Project Health Center, troubleshooting replay, delivery forecasts, engineering playbooks, and Release Workbench baseline.
 
-This is an engineering baseline, not a claim that Windows-native sandbox, signed distribution, real provider credentials, or all production release gates are complete.
+## Important boundary
+
+This remains an engineering baseline. Windows-native sandbox/process containment, real provider credentials/adapters, production deployment authorization, signed distribution, complete SBOM/security tooling, and all GA release gates are not claimed complete.
