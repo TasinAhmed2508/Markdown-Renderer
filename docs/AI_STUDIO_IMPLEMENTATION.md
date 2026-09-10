@@ -14,16 +14,22 @@ The repository contains an isolated `ai-studio/` implementation so the existing 
 | 7 Safe integration | Complete baseline | `core/integration.js` |
 | 8 Independent QA | Functional baseline | evidence registry, invalidation, protected-test gate, Playwright journey, CI workflow |
 | 9 Advanced workspaces | Functional baseline | impact, architecture, health, replay, forecast, playbooks, release workbench |
+| 10 Scale | Instrumented, synthetic only | `core/benchmark.js`, `benchmarks/scale.mjs` |
+| 11 Production hardening | Instrumented, not certified | `core/hardening.js`, release-gate and recovery-drill evaluators |
 
 ## Phase 8 evidence behavior
 
 Evidence records carry acceptance criterion, commit, environment fingerprint, tool/version, procedure, timestamps, exit status, logs, artifact hashes, verifier, and validity. Relevant repository or contract changes invalidate prior evidence rather than silently carrying it forward. Protected acceptance checks require an approved rationale before their content may change.
 
-The in-app QA view deliberately leaves the Playwright browser criterion as `not-run`; `npm run studio:test:e2e` is the executable browser journey. GitHub Actions installs Chromium and runs unit, syntax, and browser checks for changes to this implementation.
+The in-app QA view deliberately leaves the Playwright browser criterion as `not-run`; `npm run studio:test:e2e` is the executable browser journey. GitHub Actions installs Chromium and runs unit, benchmark, syntax, and browser checks for changes to this implementation.
 
 ## Phase 9 behavior
 
 Advanced workspaces expose confirmed versus predicted change impact, weighted architecture comparison with a durable decision record, health signals, safe troubleshooting replay classification, uncertainty-aware delivery forecasts, bounded playbook task generation, and a release plan that blocks on missing verified candidates, incomplete QA, or production authorization.
+
+## Phase 10-11 boundary
+
+The scale harness measures local synthetic control-plane work only and refuses to claim provider/hardware capacity. Production hardening currently encodes gates and capability/recovery status without claiming signed distribution, native sandboxing, credential-store integration, or completed certification.
 
 ## Security boundary
 

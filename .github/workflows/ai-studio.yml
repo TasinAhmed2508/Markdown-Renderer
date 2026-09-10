@@ -26,6 +26,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run studio:test
+      - run: npm run studio:benchmark
       - run: find ai-studio -type f \( -name '*.js' -o -name '*.mjs' \) -print0 | xargs -0 -n1 node --check
       - run: npx playwright install --with-deps chromium
       - run: npm run studio:test:e2e
