@@ -1,4 +1,9 @@
 {
+  "type": "module",
+  "scripts": {
+    "studio:start": "node ai-studio/dev-server.mjs",
+    "studio:test": "node --test ai-studio/tests/*.test.mjs"
+  },
   "devDependencies": {
     "playwright": "^1.58.2"
   }
