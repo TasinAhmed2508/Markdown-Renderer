@@ -1,0 +1,3 @@
+export function projectModal() {
+  return `<div class="overlay" id="project-modal"><div class="modal"><div class="modal-head"><h2>Create project</h2><button data-action="close-modal">×</button></div><label>Project name<input id="project-name" placeholder="Project name"></label><label>Source root<input id="project-root" placeholder="C:/Projects/example"></label><label>Default autonomy<select id="project-permission"><option>Assisted</option><option>Supervised</option><option>Autonomous</option><option>Custom</option></select></label><div class="modal-actions"><button data-action="close-modal">Cancel</button><button class="primary" data-action="create-project">Create project</button></div></div></div>`;
+}
