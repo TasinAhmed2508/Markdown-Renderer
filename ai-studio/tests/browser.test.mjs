@@ -19,7 +19,7 @@ try {
   assert.equal(await page.evaluate(()=>document.activeElement?.tagName),'BUTTON');
   await page.getByRole('button',{name:/New task/}).click();
   assert.equal(await page.getByRole('heading',{name:'Create project'}).count(),1);
-  await page.locator('[data-action="close-modal"]').click();
+  await page.getByRole('button',{name:'Cancel'}).click();
   const buttons=await page.getByRole('button').count(); assert.ok(buttons>=8);
   await page.getByRole('button',{name:/QA/}).click();
   assert.match(await page.locator('h1').innerText(),/Independent QA/);
