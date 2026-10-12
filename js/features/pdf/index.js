@@ -178,6 +178,20 @@ function applyTypographyStyles(clone, isLight, colors) {
         el.style.lineHeight = '1.7';
     });
 
+    // Inline emphasis inherits the app theme's near-white --text-primary, which
+    // disappears on the white export background - pin it to the body colour.
+    clone.querySelectorAll('strong, b, em, i, del, s, dt, dd, figcaption, summary, sup, sub')
+        .forEach((el) => {
+            if (el.closest('pre')) return; // syntax highlighting keeps its own colours
+            el.style.color = colors.text;
+        });
+
+    // Table cells render on the white page too.
+    clone.querySelectorAll('td, th').forEach((el) => {
+        if (el.closest('pre')) return;
+        el.style.color = el.tagName === 'TH' ? '#334155' : colors.text;
+    });
+
     clone.querySelectorAll('ul, ol').forEach((list) => {
         list.style.paddingLeft = '1.6em';
         list.style.listStylePosition = 'outside';
