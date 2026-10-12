@@ -238,3 +238,46 @@
 [data-theme="light"] .dropdown-menu button:hover {
     background: #f1f5f9;
 }
+/* ============================================
+   LIGHT THEME FIXES
+   The footer credit and the status bar are styled for the dark theme inline,
+   which left them invisible on the light background.
+   ============================================ */
+[data-theme="light"] .fixed.bottom-6.left-8 span,
+[data-theme="light"] .fixed.bottom-6.left-8 a {
+    color: rgba(30, 41, 59, 0.65) !important;
+}
+
+[data-theme="light"] .fixed.bottom-6.left-8 a:hover {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .liquid-glass,
+[data-theme="light"] .liquid-shadow {
+    background: rgba(255, 255, 255, 0.75) !important;
+}
+
+[data-theme="light"] #word-count,
+[data-theme="light"] #read-time {
+    color: #1e293b !important;
+}
+
+/* Window chrome header strip */
+[data-theme="light"] #window-chrome > div:first-child {
+    background: rgba(15, 23, 42, 0.04) !important;
+    border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Range slider contrast on the light theme */
+[data-theme="light"] input[type="range"] {
+    background: rgba(15, 23, 42, 0.25) !important;
+}
+
+[data-theme="light"] input[type="range"]::-webkit-slider-thumb {
+    background: #334155;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="light"] input[type="range"]::-moz-range-thumb {
+    background: #334155;
+}

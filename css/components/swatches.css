@@ -1,4 +1,5 @@
-.swatches {
+.swatches,
+#theme-swatches {
     display: flex;
     gap: 8px;
 }
@@ -17,5 +18,6 @@
 }
 
 .swatch.active {
-    border-color: #0071e3;
+    border-color: #6366f1;
+    transform: scale(1.12);
 }

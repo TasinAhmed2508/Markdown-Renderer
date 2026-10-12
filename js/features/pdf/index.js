@@ -5,7 +5,7 @@
 
 /* global html2pdf */
 
-import { buildPdfOptions, getThemeColors } from './config.js';
+import { buildPdfOptions, getThemeColors, PRINT_WIDTH, PAGE } from './config.js';
 import {
     generateBodyStyles,
     getHeadingStyles,
@@ -16,6 +16,8 @@ import { removeInteractiveElements, fixImageDimensions } from './element-cloner.
 import { processMathElements } from './math-handler.js';
 import { processCodeBlocks } from './code-handler.js';
 import { processTables } from './table-handler.js';
+import { withPrintDiagrams } from './mermaid-print.js';
+import { withLightCodeTheme } from './code-theme-print.js';
 import { showProgress } from '../../ui/pdf-progress.js';
 import { getLatestRenderPromise, updateOutputUI } from '../../ui/events.js';
 import { state } from '../../core/state.js';
@@ -30,43 +32,60 @@ export async function generatePDF(element, filename) {
 
     const progress = showProgress();
     let cleanup = () => {};
+    const t0 = performance.now();
+    const marks = [];
+    const mark = (label) => marks.push(`${label}=${Math.round(performance.now() - t0)}ms`);
 
     try {
+        // Freeze the app viewport for the duration of the capture: the inline
+        // shader must neither run inside the cloned document nor keep burning the
+        // main thread that html2canvas needs.
+        window.__renderxPdfExport = true;
+        window.__renderxShaderPaused = true;
+
         progress.updateStatus('Waiting for render completion...');
-        progress.updateProgress(10);
+        progress.updateProgress(15);
         await getLatestRenderPromise();
+        mark('render');
 
         progress.updateStatus('Preparing fonts and images...');
-        progress.updateProgress(20);
+        progress.updateProgress(30);
         await waitForFonts();
         await waitForImages(element);
+        mark('assets');
 
-        progress.updateStatus('Preparing print theme...');
-        progress.updateProgress(30);
-        // Use a print-first light palette for consistent readability in generated PDFs.
+        progress.updateStatus('Building print layout...');
+        progress.updateProgress(50);
+        // Consistent A4 output regardless of the current window size.
         const isLight = true;
         const colors = getThemeColors(isLight);
-
-        progress.updateStatus('Applying print styles...');
-        progress.updateProgress(55);
         cleanup = prepareElementForPdf(element, isLight, colors);
 
-        progress.updateStatus('Generating PDF file...');
-        progress.updateProgress(95);
+        progress.updateStatus('Adapting diagrams for print...');
+        progress.updateProgress(65);
+
         const options = buildPdfOptions(filename, colors.bg);
 
-        await html2pdf().set(options).from(element).save();
+        await withPrintDiagrams(element, () => withLightCodeTheme(async () => {
+            progress.updateStatus('Generating PDF file...');
+            progress.updateProgress(85);
+            await html2pdf().set(options).from(element).save();
+            mark('capture');
+        }));
+        mark('diagrams');
 
         progress.updateProgress(100);
         await sleep(250);
         progress.hide();
-
+        console.info(`[RenderX] PDF export finished in ${Math.round(performance.now() - t0)}ms (${marks.join(', ')})`);
     } catch (err) {
         console.error('PDF Generation Error:', err);
         progress.showError(err.message || 'Failed to generate PDF');
         throw err;
     } finally {
         cleanup();
+        window.__renderxPdfExport = false;
+        window.__renderxShaderPaused = false;
         // Re-render to restore the interactive preview state after temporary PDF styling.
         await Promise.resolve(updateOutputUI(state.markdown));
     }
@@ -80,9 +99,9 @@ function hasRenderableContent(element) {
 }
 
 async function waitForFonts() {
-    if (document.fonts && typeof document.fonts.ready?.then === 'function') {
-        await document.fonts.ready;
-    }
+    if (!document.fonts || typeof document.fonts.ready?.then !== 'function') return;
+    // Never let an unreachable webfont CDN stall the export.
+    await Promise.race([document.fonts.ready, sleep(1500)]);
 }
 
 async function waitForImages(element) {
@@ -100,7 +119,7 @@ async function waitForImages(element) {
             };
             img.addEventListener('load', done, { once: true });
             img.addEventListener('error', done, { once: true });
-            setTimeout(done, 2500);
+            setTimeout(done, 1500);
         });
     });
 
@@ -115,16 +134,18 @@ function prepareElementForPdf(element, isLight, colors) {
     element.className = 'markdown-body pdf-export-body';
     element.style.setProperty('background-color', bodyStyles.backgroundColor, 'important');
     element.style.setProperty('color', bodyStyles.color, 'important');
-    element.style.setProperty('width', bodyStyles.width);
-    element.style.setProperty('height', bodyStyles.height);
-    element.style.setProperty('overflow', bodyStyles.overflow);
-    element.style.setProperty('box-sizing', bodyStyles.boxSizing);
-    element.style.setProperty('border-radius', bodyStyles.borderRadius);
-    element.style.setProperty('padding', bodyStyles.padding);
+    element.style.setProperty('width', `${PRINT_WIDTH}px`, 'important');
+    element.style.setProperty('max-width', `${PRINT_WIDTH}px`, 'important');
+    element.style.setProperty('margin', `0 auto`, 'important');
+    element.style.setProperty('height', 'auto', 'important');
+    element.style.setProperty('overflow', 'visible');
+    element.style.setProperty('box-sizing', 'border-box');
+    element.style.setProperty('border-radius', '0');
+    element.style.setProperty('padding', `${PAGE.PADDING}px`);
     element.style.setProperty('min-height', '0');
 
     applyTypographyStyles(element, isLight, colors);
-    applyDiagramStyles(element);
+    applyDiagramStyles(element, isLight);
     removeInteractiveElements(element);
     fixImageDimensions(element, element);
     processMathElements(element, isLight);
@@ -158,7 +179,8 @@ function applyTypographyStyles(clone, isLight, colors) {
     });
 
     clone.querySelectorAll('ul, ol').forEach((list) => {
-        list.style.paddingLeft = '1.5em';
+        list.style.paddingLeft = '1.6em';
+        list.style.listStylePosition = 'outside';
     });
 
     clone.querySelectorAll('a').forEach((a) => {
@@ -177,47 +199,58 @@ function applyTypographyStyles(clone, isLight, colors) {
         hr.style.background = isLight ? 'rgba(30,41,59,0.18)' : 'rgba(255,255,255,0.18)';
         hr.style.margin = '1.5em 0';
     });
+
+    // Inline code sits on a dark chip in the app theme
+    clone.querySelectorAll('code').forEach((code) => {
+        if (code.closest('pre')) return;
+        code.style.background = isLight ? 'rgba(15,23,42,0.07)' : 'rgba(255,255,255,0.1)';
+        code.style.color = colors.text;
+    });
 }
 
-function applyDiagramStyles(clone) {
+function applyDiagramStyles(clone, isLight) {
+    // Diagrams are re-rendered with the light mermaid theme for the capture, so
+    // they only need a neutral frame here (never a forced width/height, which
+    // would squash the diagram out of proportion).
     clone.querySelectorAll('.mermaid').forEach((el) => {
         Object.assign(el.style, {
-            margin: '1.1em auto',
+            margin: '1.2em auto',
             padding: '12px',
-            border: '1px solid rgba(148, 163, 184, 0.25)',
+            background: isLight ? '#ffffff' : 'rgba(255,255,255,0.03)',
+            border: `1px solid ${isLight ? '#e2e8f0' : 'rgba(148,163,184,0.25)'}`,
             borderRadius: '8px',
-            maxHeight: '420px',
+            boxShadow: 'none',
+            overflow: 'visible',
             breakInside: 'avoid',
             pageBreakInside: 'avoid'
         });
 
         const svg = el.querySelector('svg');
         if (svg) {
-            const explicitHeight = Number(svg.getAttribute('height')) || 0;
-            if (explicitHeight > 0) {
-                const targetHeight = Math.min(explicitHeight, 360);
-                const scale = targetHeight / explicitHeight;
-                const explicitWidth = Number(svg.getAttribute('width')) || 0;
-                if (explicitWidth > 0) {
-                    svg.style.width = `${Math.max(220, Math.round(explicitWidth * scale))}px`;
-                } else {
-                    svg.style.width = '100%';
-                }
-                svg.style.height = `${targetHeight}px`;
-            } else {
-                svg.style.maxWidth = '100%';
-                svg.style.height = 'auto';
-            }
-
+            svg.removeAttribute('height');
+            svg.style.width = '100%';
+            svg.style.maxWidth = '100%';
+            svg.style.height = 'auto';
             svg.style.display = 'block';
             svg.style.margin = '0 auto';
         }
+    });
+
+    clone.querySelectorAll('.mermaid-error-msg').forEach((el) => {
+        Object.assign(el.style, {
+            background: isLight ? '#fef2f2' : 'rgba(239,68,68,0.12)',
+            border: '1px dashed #ef4444',
+            borderRadius: '8px',
+            padding: '12px 16px',
+            color: isLight ? '#991b1b' : '#fecaca'
+        });
     });
 
     clone.querySelectorAll('.chart-container').forEach((container) => {
         Object.assign(container.style, {
             margin: '1.1em auto',
             padding: '0.75rem',
+            background: isLight ? '#ffffff' : 'rgba(255,255,255,0.03)',
             maxWidth: '100%',
             breakInside: 'avoid',
             pageBreakInside: 'avoid'

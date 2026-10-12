@@ -1,5 +1,5 @@
 import { state, setState, subscribe } from './core/state.js';
-import { initInput, updateOutputUI, syncInputUI } from './ui/events.js';
+import { initInput, updateOutputUI, syncInputUI, applyMermaidTheme } from './ui/events.js';
 import { elements } from './ui/dom.js';
 import { initThemes, updateThemeUI } from './features/theme.js';
 import { initPadding, updatePaddingUI } from './features/padding.js';
@@ -116,6 +116,7 @@ function init() {
 
         // Capture after feature init so initTabs changes are reflected
         let lastMarkdown;
+        let lastTheme = state.theme;
 
         const debouncedRender = debounce((markdown) => {
             Promise.resolve(updateOutputUI(markdown))
@@ -126,10 +127,22 @@ function init() {
         }, 300);
 
         subscribe((newState) => {
+            const themeChanged = newState.theme !== lastTheme;
+            if (themeChanged) lastTheme = newState.theme;
+
             updateThemeUI(newState.theme);
             updatePaddingUI(newState.padding);
 
             const markdownChanged = newState.markdown !== lastMarkdown;
+
+            // Diagrams are rendered per theme, so a theme switch needs a re-render.
+            if (themeChanged && !markdownChanged) {
+                applyMermaidTheme(newState.theme);
+                Promise.resolve(updateOutputUI(newState.markdown))
+                    .finally(() => toggleLoader(false));
+                return;
+            }
+
             if (!markdownChanged) return;
 
             lastMarkdown = newState.markdown;

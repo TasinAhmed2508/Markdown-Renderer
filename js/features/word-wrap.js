@@ -5,9 +5,12 @@ const STORAGE_KEY = 'ta-renderx-word-wrap';
 let enabled = false;
 
 function applyWrap(textarea) {
+    // Wrapped rows break the line<->number mapping, so the gutter is hidden.
+    document.body.classList.toggle('wrap-enabled', enabled);
     if (!textarea) return;
     textarea.style.whiteSpace = enabled ? 'pre-wrap' : 'pre';
     textarea.style.wordBreak = enabled ? 'break-word' : 'normal';
+    textarea.style.overflowX = enabled ? 'hidden' : 'auto';
 }
 
 function updateButton() {

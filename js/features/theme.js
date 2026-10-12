@@ -1,24 +1,38 @@
 import { state, setState } from '../core/state.js';
 import { elements } from '../ui/dom.js';
 
-export function initThemes() {
-    const swatchContainer = elements.themeSwatches;
-    if (!swatchContainer) return;
-
+/**
+ * Build the theme swatch buttons inside any container.
+ * Used by the hidden navbar strip and by the settings modal.
+ */
+export function renderThemeSwatches(container) {
+    if (!container) return;
+    container.innerHTML = '';
     state.themes.forEach(theme => {
-        const swatch = document.createElement('div');
+        const swatch = document.createElement('button');
+        swatch.type = 'button';
         swatch.className = `swatch ${state.theme === theme.id ? 'active' : ''}`;
         swatch.style.backgroundColor = theme.color;
         swatch.title = theme.id;
-
+        swatch.setAttribute('aria-label', `Use ${theme.id} theme`);
         swatch.addEventListener('click', () => {
             setState({ theme: theme.id });
+            syncSwatches();
         });
-
-        swatchContainer.appendChild(swatch);
+        container.appendChild(swatch);
     });
+}
 
-    // Initialize toggle button
+function syncSwatches() {
+    document.querySelectorAll('.swatch').forEach(s => {
+        s.classList.toggle('active', s.title === state.theme);
+    });
+}
+
+export function initThemes() {
+    renderThemeSwatches(elements.themeSwatches);
+
+    // Light <-> dark toggle button
     const toggleBtn = document.getElementById('btn-theme-toggle');
     if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
@@ -29,20 +43,17 @@ export function initThemes() {
 }
 
 export function updateThemeUI(currentTheme) {
-    document.body.setAttribute('data-theme', currentTheme);
-    document.documentElement.setAttribute('data-theme', currentTheme);
+    const theme = currentTheme || 'default';
+    document.body.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
 
-    // Update swatches
-    const swatches = elements.themeSwatches?.querySelectorAll('.swatch');
-    swatches?.forEach(s => {
-        s.classList.toggle('active', s.title === currentTheme);
-    });
+    syncSwatches();
 
-    // Update toggle button icons
+    // Swap the sun/moon icons on the navbar toggle
     const iconLight = document.querySelector('.theme-icon-light');
     const iconDark = document.querySelector('.theme-icon-dark');
     if (iconLight && iconDark) {
-        if (currentTheme === 'light') {
+        if (theme === 'light') {
             iconLight.classList.remove('hidden');
             iconDark.classList.add('hidden');
         } else {
@@ -51,7 +62,5 @@ export function updateThemeUI(currentTheme) {
         }
     }
 
-    // Re-init lucide icons
     if (window.lucide) window.lucide.createIcons();
 }
-

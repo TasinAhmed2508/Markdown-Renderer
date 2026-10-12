@@ -17,6 +17,12 @@ function addAriaLabels() {
         'btn-word-wrap': 'Toggle word wrap',
         'btn-spellcheck': 'Toggle spellcheck',
         'btn-zen-mode': 'Toggle zen mode',
+        'btn-toc': 'Toggle table of contents',
+        'btn-outline': 'Toggle document outline',
+        'btn-slides': 'Start presentation mode',
+        'btn-version-history': 'Toggle version history',
+        'btn-settings': 'Open settings',
+        'btn-share': 'Share document',
         'markdown-input': 'Markdown editor'
     };
     for (const [id, label] of Object.entries(labels)) {

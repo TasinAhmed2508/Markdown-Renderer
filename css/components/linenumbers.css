@@ -1,49 +1,52 @@
-.editor-wrapper {
-    position: relative;
-    height: calc(100% - 40px);
-    width: 100%;
-    display: flex;
-    overflow: hidden;
-}
+/* Editor line numbers.
+   The numbers column must use EXACTLY the same font metrics and top padding as
+   the textarea, otherwise the numbers drift out of sync further down the file. */
 
-.line-numbers {
-    width: 40px;
+#line-numbers {
+    flex-shrink: 0;
+    width: 44px;
     height: 100%;
+    padding: 24px 10px 24px 0;
+    overflow: hidden;
+    text-align: right;
+    white-space: pre;
+    color: rgba(255, 255, 255, 0.28);
     background: rgba(0, 0, 0, 0.2);
     border-right: 1px solid rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.3);
     font-family: "SF Mono", Monaco, Consolas, monospace;
-    font-size: 15px;
-    line-height: 1.7;
-    text-align: right;
-    padding: 24px 8px 24px 0;
-    overflow: hidden;
+    font-size: 16px;
+    line-height: 1.6;
     user-select: none;
-    flex-shrink: 0;
+    -webkit-user-select: none;
 }
 
 #markdown-input {
     flex: 1;
     height: 100%;
+    padding: 24px;
     border: none;
     resize: none;
     outline: none;
-    font-size: 15px;
-    font-family: "SF Mono", Monaco, Consolas, monospace;
-    line-height: 1.7;
+    overflow-y: auto;
     background: transparent;
     color: #fff;
-    padding: 24px;
-    overflow-y: scroll;
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
-/* Light Mode */
-[data-theme="light"] .line-numbers {
+/* Wrapped lines break the 1:1 mapping between rows and numbers, so hide them. */
+body.wrap-enabled #line-numbers { display: none; }
+
+/* Light theme */
+[data-theme="light"] #line-numbers {
     background: rgba(0, 0, 0, 0.03);
     border-right-color: rgba(0, 0, 0, 0.08);
     color: #94a3b8;
 }
 
-[data-theme="light"] #markdown-input {
-    color: #1e293b;
+[data-theme="light"] #markdown-input { color: #1e293b; }
+
+@media (max-width: 768px) {
+    #line-numbers { display: none; }
 }

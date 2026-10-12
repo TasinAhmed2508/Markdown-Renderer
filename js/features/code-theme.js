@@ -62,6 +62,15 @@ function injectStyles() {
             background: #1a1a2e;
             color: #e0e0e0;
         }
+        [data-theme="light"] #code-theme-select {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            color: #334155;
+        }
+        [data-theme="light"] #code-theme-select option {
+            background: #ffffff;
+            color: #334155;
+        }
     `;
     document.head.appendChild(style);
 }
@@ -84,14 +93,10 @@ function createSelect() {
 
     select.addEventListener('change', () => setTheme(select.value));
 
-    // Insert into toolbar area
-    const toolbar = document.getElementById('app-toolbar');
-    if (toolbar) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'hidden md:flex items-center gap-1';
-        wrapper.appendChild(select);
-        toolbar.insertBefore(wrapper, toolbar.firstChild);
-    }
+    // Mount into the editor toolbar (fallback: navbar actions)
+    const host = document.getElementById('editor-toolbar')
+        || document.getElementById('app-toolbar');
+    if (host) host.appendChild(select);
 }
 
 export function initCodeTheme() {

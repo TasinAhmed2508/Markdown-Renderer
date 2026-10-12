@@ -149,6 +149,11 @@ function exportPlainText() {
 
 // --- Add buttons to export menu ---
 
+function closeExportMenu() {
+    const menu = document.getElementById('export-menu');
+    if (menu) menu.classList.add('opacity-0', 'invisible', 'scale-95');
+}
+
 function addExportButtons() {
     // Bind to existing buttons in HTML (preferred)
     const bindings = [
@@ -161,7 +166,11 @@ function addExportButtons() {
     for (const { id, handler } of bindings) {
         const btn = document.getElementById(id);
         if (btn) {
-            btn.addEventListener('click', handler);
+            // Close the dropdown like the other export actions do.
+            btn.addEventListener('click', () => {
+                closeExportMenu();
+                handler();
+            });
         } else {
             allBound = false;
         }

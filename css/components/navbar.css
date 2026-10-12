@@ -3,7 +3,9 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 50;
+    /* Above the slide-in side panels (z-index 55) so the export dropdown and
+       theme controls stay clickable while a panel is open. */
+    z-index: 60;
     top: 0;
     width: 100%;
     height: 4.5rem;

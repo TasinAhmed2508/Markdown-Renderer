@@ -28,10 +28,14 @@
     color: #fff;
 }
 
-.tool-btn.active {
-    background: rgba(0, 113, 227, 0.5);
+.tool-btn.active,
+#editor-toolbar button.active {
+    background: rgba(99, 102, 241, 0.35);
     color: #fff;
 }
+
+/* Language picker injected by code-theme.js */
+#editor-toolbar #code-theme-select { margin-left: auto; }
 
 .tool-separator {
     width: 1px;

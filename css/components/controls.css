@@ -1,18 +1,53 @@
+/* Form controls: sliders and the dropped-file badge */
+
 input[type="range"] {
     -webkit-appearance: none;
-    height: 6px;
-    background: #d2d2d7;
-    border-radius: 5px;
+    appearance: none;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
     outline: none;
+    cursor: pointer;
 }
 
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    background: #fff;
-    border: 1px solid #d2d2d7;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 0;
     border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.15s ease;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+    transform: scale(1.15);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+}
+
+.file-badge {
+    display: inline-flex;
+    align-items: center;
+    max-width: 160px;
+    margin-left: auto;
+    padding: 3px 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 11px;
+    color: #a5b4fc;
+    background: rgba(99, 102, 241, 0.14);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 999px;
 }

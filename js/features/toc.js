@@ -3,41 +3,12 @@ import { elements } from '../ui/dom.js';
 import { registerCommand } from './commands.js';
 
 const STYLES = `
-#btn-toc {
-    position: fixed;
-    bottom: 80px;
-    right: 24px;
-    z-index: 60;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(13,17,23,0.85);
-    backdrop-filter: blur(16px);
-    color: #a5b4fc;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-}
-#btn-toc:hover {
-    background: rgba(99,102,241,0.2);
-    border-color: rgba(99,102,241,0.4);
-    transform: scale(1.05);
-}
-#btn-toc.active {
-    background: rgba(99,102,241,0.25);
-    border-color: rgba(99,102,241,0.5);
-}
 #toc-panel {
     position: fixed;
-    top: 0;
+    top: 4.5rem;
     right: 0;
     width: 320px;
-    height: 100vh;
+    height: calc(100vh - 4.5rem);
     z-index: 55;
     background: rgba(13,17,23,0.92);
     backdrop-filter: blur(24px);
@@ -217,12 +188,9 @@ function copyTOCAsMarkdown() {
 export function initTOC() {
     injectStyles();
 
-    // Create toggle button
-    const btn = document.createElement('button');
-    btn.id = 'btn-toc';
-    btn.title = 'Table of Contents';
-    btn.innerHTML = '<i data-lucide="list" style="width:20px;height:20px"></i>';
-    document.body.appendChild(btn);
+    // Reuse the toolbar button (index.html already renders it)
+    const btn = document.getElementById('btn-toc');
+    if (!btn) return;
 
     // Create panel
     panel = document.createElement('div');

@@ -103,30 +103,12 @@ function loadSharedContent() {
     }
 }
 
-function createShareButton() {
-    const toolbar = document.getElementById('app-toolbar');
-    if (!toolbar) return;
-
-    const btn = document.createElement('button');
-    btn.id = 'btn-share';
-    btn.className = 'relative hidden md:inline-flex items-center justify-center gap-2 px-6 py-2 rounded-full text-sm font-medium text-white transition-transform active:scale-95 group';
-    btn.innerHTML = `
-        <div class="absolute inset-0 bg-emerald-600 rounded-full blur opacity-40 group-hover:opacity-60 transition-opacity"></div>
-        <div class="relative bg-emerald-500/20 border border-emerald-400/30 rounded-full px-6 py-2 flex items-center gap-2 backdrop-blur-md">
-            <i data-lucide="share-2" class="w-4 h-4"></i> Share
-        </div>
-    `;
+function bindShareButton() {
+    // index.html already renders the Share button in the navbar - reuse it instead
+    // of injecting a second button with the same id (which left the visible button dead).
+    const btn = document.getElementById('btn-share');
+    if (!btn) return;
     btn.addEventListener('click', showShareModal);
-
-    // Insert before the last child (Save button)
-    const saveBtn = document.getElementById('btn-download-md');
-    if (saveBtn) {
-        toolbar.insertBefore(btn, saveBtn);
-    } else {
-        toolbar.appendChild(btn);
-    }
-
-    if (window.lucide) window.lucide.createIcons();
 }
 
 function injectShareStyles() {
@@ -227,7 +209,7 @@ function injectShareStyles() {
 
 export function initCollaboration() {
     injectShareStyles();
-    createShareButton();
+    bindShareButton();
     loadSharedContent();
 
     registerCommand('share-document', {

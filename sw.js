@@ -3,7 +3,7 @@
  * Cache-first for local assets, network-first for CDN resources
  */
 
-const CACHE_NAME = 'renderx-v4';
+const CACHE_NAME = 'renderx-v5';
 
 const APP_SHELL = [
     './',
@@ -27,6 +27,8 @@ const APP_SHELL = [
     './css/components/tables.css',
     './css/components/diagrams.css',
     './css/components/code-blocks.css',
+    './css/components/typography.css',
+    './css/themes/default.css',
     './css/themes/light.css',
     './css/themes/sunset.css',
     './css/themes/ocean.css',
@@ -49,7 +51,7 @@ self.addEventListener('install', (event) => {
     );
 });
 
-// Activate: clean up old caches and force clients to reload
+// Activate: clean up old caches and take over (no forced client reload)
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((keys) => {
@@ -58,12 +60,6 @@ self.addEventListener('activate', (event) => {
                     .map((key) => caches.delete(key))
             );
         }).then(() => self.clients.claim())
-          .then(() => {
-              // Notify all clients to reload with fresh code
-              return self.clients.matchAll({ type: 'window' }).then(clients => {
-                  clients.forEach(client => client.navigate(client.url));
-              });
-          })
     );
 });
 

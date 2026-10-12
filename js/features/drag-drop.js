@@ -1,6 +1,20 @@
 import { state, setState } from '../core/state.js';
 import { elements } from '../ui/dom.js';
 
+function showFilename(name) {
+    let el = document.getElementById('filename-display');
+    if (!el) {
+        const toolbar = document.getElementById('editor-toolbar');
+        if (!toolbar) return;
+        el = document.createElement('span');
+        el.id = 'filename-display';
+        el.className = 'file-badge';
+        toolbar.appendChild(el);
+    }
+    el.textContent = name;
+    document.title = `${name} - TA RenderX`;
+}
+
 export function initDragDrop() {
     const textarea = elements.input;
     if (!textarea) return;
@@ -35,9 +49,7 @@ export function initDragDrop() {
             textarea.value = content;
             setState({ markdown: content });
 
-            // Set filename display if available
-            const filenameEl = document.getElementById('filename-display');
-            if (filenameEl) filenameEl.textContent = mdFile.name;
+            showFilename(mdFile.name);
         };
         reader.readAsText(mdFile);
     });

@@ -5,6 +5,7 @@
 
 import { elements } from '../ui/dom.js';
 import { getLatestRenderPromise } from '../ui/events.js';
+import { showToast } from '../ui/toast.js';
 import { generatePDF } from './pdf/index.js';
 import { exportPNG } from './export-png.js';
 import { exportHTML } from './export-html.js';
@@ -76,6 +77,11 @@ async function handlePDFExport() {
         await generatePDF(content, `TA-RenderX-${timestamp()}.pdf`);
     } catch (err) {
         console.error('PDF Export failed:', err);
+        // generatePDF already reports inside its progress modal, but a failure
+        // before the modal (or after it closed) must not stay silent.
+        if (!document.getElementById('pdf-progress-modal')) {
+            showToast(`PDF export failed: ${err.message}`, 'error');
+        }
     }
 }
 

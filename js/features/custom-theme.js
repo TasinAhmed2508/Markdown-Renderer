@@ -1,6 +1,7 @@
 import { state, setState } from '../core/state.js';
 import { elements } from '../ui/dom.js';
 import { registerCommand } from './commands.js';
+import { renderThemeSwatches } from './theme.js';
 
 const STORAGE_KEY = 'custom-themes';
 const ACTIVE_CUSTOM_THEME_KEY = 'active-custom-theme';
@@ -135,6 +136,34 @@ function injectModalStyles() {
             border-color: rgba(239,68,68,0.3);
         }
         #custom-theme-modal button.danger:hover { background: rgba(239,68,68,0.4); }
+        #custom-theme-modal .theme-picker-section {
+            margin-top: 18px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 14px;
+        }
+        #custom-theme-modal .theme-picker-section h4 {
+            font-size: 14px;
+            margin: 0 0 10px;
+            color: #999;
+        }
+        #custom-theme-modal .theme-swatches {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        #custom-theme-modal .theme-swatches .swatch {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.15);
+            padding: 0;
+            transition: transform 0.2s;
+        }
+        #custom-theme-modal .theme-swatches .swatch.active {
+            border-color: #6366f1;
+            transform: scale(1.12);
+        }
         #custom-theme-modal .saved-themes {
             margin-top: 18px;
             border-top: 1px solid rgba(255,255,255,0.08);
@@ -267,10 +296,15 @@ function createModal() {
                 <button class="danger" id="ct-close">Close</button>
             </div>
 
-            <div class="saved-themes">
-                <h4>Saved Themes</h4>
-                <div id="ct-saved-list"></div>
-            </div>
+                    <div class="theme-picker-section">
+                        <h4>App Theme</h4>
+                        <div id="ct-theme-swatches" class="theme-swatches"></div>
+                    </div>
+
+                    <div class="saved-themes">
+                        <h4>Saved Custom Themes</h4>
+                        <div id="ct-saved-list"></div>
+                    </div>
 
             <div id="font-settings-section"></div>
         </div>
@@ -367,10 +401,11 @@ function renderSavedThemes() {
     }).join('');
 }
 
-function openModal() {
+export function openThemeSettings() {
     createModal();
     const modal = document.getElementById('custom-theme-modal');
     modal.classList.add('active');
+    renderThemeSwatches(document.getElementById('ct-theme-swatches'));
 
     // Restore active custom theme colors to pickers if any
     try {
@@ -412,10 +447,14 @@ export function initCustomTheme() {
         if (saved) applyCustomColors(saved);
     } catch {}
 
+    // The navbar settings button was never wired up
+    const settingsBtn = document.getElementById('btn-settings');
+    if (settingsBtn) settingsBtn.addEventListener('click', openThemeSettings);
+
     registerCommand('theme-settings', {
         name: 'Theme Settings',
         icon: 'palette',
         category: 'appearance',
-        execute: openModal
+        execute: openThemeSettings
     });
 }

@@ -9,41 +9,12 @@ const MAX_SNAPSHOTS = 50;
 const AUTO_SAVE_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
 const STYLES = `
-#btn-version-history {
-    position: fixed;
-    bottom: 80px;
-    right: 128px;
-    z-index: 60;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(13,17,23,0.85);
-    backdrop-filter: blur(16px);
-    color: #fbbf24;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-}
-#btn-version-history:hover {
-    background: rgba(251,191,36,0.15);
-    border-color: rgba(251,191,36,0.3);
-    transform: scale(1.05);
-}
-#btn-version-history.active {
-    background: rgba(251,191,36,0.2);
-    border-color: rgba(251,191,36,0.4);
-}
 #version-history-panel {
     position: fixed;
-    top: 0;
+    top: 4.5rem;
     right: 0;
     width: 340px;
-    height: 100vh;
+    height: calc(100vh - 4.5rem);
     z-index: 55;
     background: rgba(13,17,23,0.94);
     backdrop-filter: blur(24px);
@@ -403,12 +374,9 @@ export async function initVersionHistory() {
 
     await openDB();
 
-    // Create toggle button
-    const btn = document.createElement('button');
-    btn.id = 'btn-version-history';
-    btn.title = 'Version History';
-    btn.innerHTML = '<i data-lucide="history" style="width:20px;height:20px"></i>';
-    document.body.appendChild(btn);
+    // Reuse the toolbar button (index.html already renders it)
+    const btn = document.getElementById('btn-version-history');
+    if (!btn) return;
 
     // Create panel
     panel = document.createElement('div');

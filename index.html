@@ -68,8 +68,10 @@
     <link rel="stylesheet" href="css/components/tables.css">
     <link rel="stylesheet" href="css/components/diagrams.css">
     <link rel="stylesheet" href="css/components/code-blocks.css">
+    <link rel="stylesheet" href="css/components/typography.css">
 
     <!-- 6. Themes -->
+    <link rel="stylesheet" href="css/themes/default.css">
     <link rel="stylesheet" href="css/themes/light.css">
     <link rel="stylesheet" href="css/themes/sunset.css">
     <link rel="stylesheet" href="css/themes/ocean.css">
@@ -238,9 +240,9 @@
     <main class="app-grid relative z-10">
 
         <!-- Editor Pane -->
-        <div class="glass-pane border-t border-white/5 transition-all hover:border-white/10 group/editor">
+        <div class="glass-pane editor-pane border-t border-white/5 transition-all hover:border-white/10 group/editor">
             <!-- Editor Toolbar -->
-            <div class="flex items-center gap-2 p-3 border-b border-white/5 bg-black/20 backdrop-blur-xl"
+            <div class="flex items-center gap-2 p-3 border-b border-white/5 bg-black/20 backdrop-blur-xl flex-wrap"
                 id="editor-toolbar">
                 <div class="flex items-center bg-white/5 rounded-lg p-1">
                     <button
@@ -298,18 +300,16 @@
             </div>
 
             <!-- Editor Area -->
-            <div class="relative flex-1 overflow-hidden flex">
-                <div id="line-numbers"
-                    class="hidden md:block w-12 bg-black/20 border-r border-white/5 text-right p-4 text-gray-500 font-mono text-xs pt-6 select-none">
-                </div>
+            <div class="relative flex-1 overflow-hidden flex" id="editor-wrapper">
+                <div id="line-numbers" class="line-numbers"></div>
                 <textarea id="markdown-input"
-                    class="flex-1 p-6 bg-transparent text-gray-200 font-mono text-sm resize-none focus:outline-none selection:bg-indigo-500/30 placeholder-gray-600"
+                    class="flex-1 bg-transparent resize-none focus:outline-none selection:bg-indigo-500/30 placeholder-gray-600"
                     spellcheck="false"></textarea>
             </div>
         </div>
 
         <!-- Preview Pane -->
-        <div class="glass-pane relative overflow-hidden">
+        <div class="glass-pane preview-pane relative overflow-hidden">
             <div id="preview-loader" class="loader">
                 <div class="spinner"></div>
             </div>
@@ -334,7 +334,7 @@
                     </div>
 
                     <!-- Content -->
-                    <div id="markdown-output" class="markdown-body !bg-transparent !p-10 !h-auto"></div>
+                    <div id="markdown-output" class="markdown-body"></div>
                 </div>
             </div>
 
@@ -395,13 +395,24 @@
         });
 
         // Initialize Shader (Inline for simplicity or load via module)
-        window.onload = function () {
+        function initShaderBackground() {
+            // Skip while a PDF/print snapshot is being taken (html2canvas clones this DOM
+            // and a live WebGL canvas makes the capture extremely slow).
+            if (window.__renderxPdfExport) return;
+
             const container = document.getElementById('canvas-container');
+            if (!container) return;
             const scene = new THREE.Scene();
             const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'low-power' });
+            // The aurora is a soft blur, so it is rendered at half resolution: the
+            // fragment shader is 35 noise iterations per pixel and was saturating
+            // the main thread (blocking exports, typing and scrolling).
+            renderer.setPixelRatio(0.5);
             renderer.setSize(window.innerWidth, window.innerHeight);
             container.appendChild(renderer.domElement);
+
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
             const material = new THREE.ShaderMaterial({
                 uniforms: { iTime: { value: 0 }, iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) } },
@@ -470,8 +481,16 @@
             scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
 
             function animate() {
-                material.uniforms.iTime.value += 0.01;
-                renderer.render(scene, camera);
+                // Skip the frame when hidden (hidden tab, reduced motion, hidden
+                // container) or during exports - html2canvas needs the main thread.
+                const visible = !document.hidden
+                    && !window.__renderxShaderPaused
+                    && !reducedMotion.matches
+                    && container.offsetParent !== null;
+                if (visible) {
+                    material.uniforms.iTime.value += 0.01;
+                    renderer.render(scene, camera);
+                }
                 requestAnimationFrame(animate);
             }
             animate();
@@ -480,14 +499,19 @@
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 material.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
             });
-        };
+        }
+
+        window.addEventListener('load', () => {
+            if (typeof THREE === 'undefined') return;
+            try { initShaderBackground(); } catch (err) { console.warn('Shader skipped:', err); }
+        });
     </script>
 
     <!-- Load Main Logic -->
     <script type="module" src="js/main.js"></script>
-    <!-- Extension Install Banner -->
-    <div id="ext-banner" class="hidden fixed top-0 left-0 right-0 z-[9999]" style="pointer-events:none;">
-        <div style="pointer-events:auto;max-width:720px;margin:16px auto;padding:14px 20px;background:linear-gradient(135deg,rgba(15,23,42,0.95),rgba(30,27,75,0.95));border:1px solid rgba(139,92,246,0.3);border-radius:14px;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,0.4);display:flex;align-items:center;gap:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+    <!-- Extension Install Banner (docked above the status bar so it never covers the toolbar) -->
+    <div id="ext-banner" class="hidden fixed bottom-20 left-1/2 -translate-x-1/2 z-40 w-full max-w-3xl px-4" style="pointer-events:none;">
+        <div style="pointer-events:auto;padding:14px 20px;background:linear-gradient(135deg,rgba(15,23,42,0.95),rgba(30,27,75,0.95));border:1px solid rgba(139,92,246,0.3);border-radius:14px;backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,0.4);display:flex;align-items:center;gap:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
             <span style="font-size:28px;flex-shrink:0;">🧩</span>
             <div style="flex:1;min-width:0;">
                 <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:3px;">ChatGPT Extractor Extension</div>
@@ -514,15 +538,20 @@
             if (window.__RENDERX_EXT_INSTALLED) return;
 
             const banner = document.getElementById('ext-banner');
+            const hide = () => {
+                banner.style.animation = 'extSlideOut 0.3s ease-in forwards';
+                setTimeout(() => banner.classList.add('hidden'), 300);
+            };
             // Show after a short delay so it doesn't flash during page load
             setTimeout(() => {
                 banner.classList.remove('hidden');
                 banner.style.animation = 'extSlideIn 0.4s ease-out';
+                // Never leave the nudge sitting over the editor
+                setTimeout(hide, 20000);
             }, 1500);
 
             document.getElementById('ext-dismiss').addEventListener('click', () => {
-                banner.style.animation = 'extSlideOut 0.3s ease-in forwards';
-                setTimeout(() => banner.remove(), 300);
+                hide();
                 localStorage.setItem('ext_banner_dismissed', '1');
             });
 
@@ -533,14 +562,15 @@
         })();
     </script>
     <style>
-        @keyframes extSlideIn { from { opacity:0; transform:translateY(-100%); } to { opacity:1; transform:translateY(0); } }
-        @keyframes extSlideOut { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(-100%); } }
+        @keyframes extSlideIn { from { opacity:0; transform:translate(-50%, 32px); } to { opacity:1; transform:translate(-50%, 0); } }
+        @keyframes extSlideOut { from { opacity:1; transform:translate(-50%, 0); } to { opacity:0; transform:translate(-50%, 32px); } }
+        @media (max-width: 900px) { #ext-banner { display: none !important; } }
     </style>
 
     <script>
         if ('serviceWorker' in navigator) {
             // Force-clear old service worker caches on version mismatch
-            const APP_VERSION = 'v4';
+            const APP_VERSION = 'v5';
             if (localStorage.getItem('app_version') !== APP_VERSION) {
                 caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).then(() => {
                     navigator.serviceWorker.getRegistrations().then(regs => {

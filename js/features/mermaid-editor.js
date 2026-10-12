@@ -54,10 +54,10 @@ const TEMPLATES = {
 const STYLES = `
 #mermaid-editor-panel {
     position: fixed;
-    top: 0;
+    top: 4.5rem;
     right: 0;
     width: 480px;
-    height: 100vh;
+    height: calc(100vh - 4.5rem);
     z-index: 56;
     background: rgba(13,17,23,0.95);
     backdrop-filter: blur(24px);

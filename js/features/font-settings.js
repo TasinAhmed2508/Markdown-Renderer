@@ -74,6 +74,14 @@ function applySettings(settings) {
         editor.style.lineHeight = settings.lineHeight;
     }
 
+    // The line-number gutter must use identical metrics or the numbers drift.
+    const gutter = document.getElementById('line-numbers');
+    if (gutter) {
+        gutter.style.fontFamily = getFontValue(settings.editorFont);
+        gutter.style.fontSize = settings.fontSize + 'px';
+        gutter.style.lineHeight = settings.lineHeight;
+    }
+
     saveSettings(settings);
 }
 

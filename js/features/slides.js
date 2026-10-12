@@ -3,31 +3,6 @@ import { elements } from '../ui/dom.js';
 import { registerCommand } from './commands.js';
 
 const STYLES = `
-#btn-slides {
-    position: fixed;
-    bottom: 80px;
-    right: 180px;
-    z-index: 60;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(13,17,23,0.85);
-    backdrop-filter: blur(16px);
-    color: #f472b6;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-}
-#btn-slides:hover {
-    background: rgba(244,114,182,0.15);
-    border-color: rgba(244,114,182,0.3);
-    transform: scale(1.05);
-}
 #slide-overlay {
     position: fixed;
     inset: 0;
@@ -343,12 +318,9 @@ function handleKeydown(e) {
 export function initSlides() {
     injectStyles();
 
-    // Create toggle button
-    const btn = document.createElement('button');
-    btn.id = 'btn-slides';
-    btn.title = 'Presentation Mode';
-    btn.innerHTML = '<i data-lucide="presentation" style="width:20px;height:20px"></i>';
-    document.body.appendChild(btn);
+    // Reuse the toolbar button (index.html already renders it)
+    const btn = document.getElementById('btn-slides');
+    if (!btn) return;
 
     // Create overlay
     overlay = document.createElement('div');

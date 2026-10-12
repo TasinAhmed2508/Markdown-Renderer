@@ -6,10 +6,20 @@ import { renderer } from '../core/renderer.js';
 let renderSeq = 0;
 let latestRenderPromise = Promise.resolve();
 
-// Initialize mermaid (Global config)
-if (typeof mermaid !== 'undefined') {
-    mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+/**
+ * Keep mermaid's own theme in sync with the app theme, otherwise diagrams stay
+ * dark when the light theme is active (and vice versa).
+ */
+export function applyMermaidTheme(themeId) {
+    if (typeof mermaid === 'undefined') return;
+    mermaid.initialize({
+        startOnLoad: false,
+        theme: themeId === 'light' ? 'default' : 'dark',
+        securityLevel: 'loose'
+    });
 }
+
+applyMermaidTheme('default');
 
 export function initInput() {
     const input = elements.input;

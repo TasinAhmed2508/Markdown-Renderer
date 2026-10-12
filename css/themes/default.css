@@ -1,0 +1,70 @@
+/* ============================================
+   DEFAULT THEME (boot theme)
+   data-theme="default" had no stylesheet at all, so every theme variable was
+   undefined on first load. This is the aurora-glass look, kept vivid.
+   ============================================ */
+
+[data-theme="default"] {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #1c2128;
+    --text-primary: #e5e7eb;
+    --text-secondary: #c9d1d9;
+    --text-muted: #8b949e;
+    --border-color: rgba(255, 255, 255, 0.12);
+    --shadow-color: rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="default"] body {
+    background: transparent;
+    color: var(--text-primary);
+}
+
+/* Keep the animated aurora background visible */
+[data-theme="default"] #canvas-container {
+    opacity: 1;
+    filter: none;
+}
+
+[data-theme="default"] #navbar {
+    background: rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="default"] .glass-pane {
+    background: rgba(16, 18, 24, 0.45);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="default"] #window-chrome {
+    background: rgba(13, 17, 23, 0.8);
+}
+
+[data-theme="default"] #markdown-input {
+    color: #e5e7eb;
+    background: transparent;
+    caret-color: #6366f1;
+}
+
+[data-theme="default"] #markdown-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="default"] .markdown-body pre {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Scrollbars */
+[data-theme="default"] ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.14);
+    background-clip: content-box;
+    border: 2px solid transparent;
+    border-radius: 99px;
+}
+
+[data-theme="default"] ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+    background-clip: content-box;
+    border: 2px solid transparent;
+}

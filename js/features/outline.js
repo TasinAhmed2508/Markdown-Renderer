@@ -3,35 +3,6 @@ import { elements } from '../ui/dom.js';
 import { registerCommand } from './commands.js';
 
 const STYLES = `
-#btn-outline {
-    position: fixed;
-    bottom: 80px;
-    right: 76px;
-    z-index: 60;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(13,17,23,0.85);
-    backdrop-filter: blur(16px);
-    color: #86efac;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-}
-#btn-outline:hover {
-    background: rgba(16,185,129,0.2);
-    border-color: rgba(16,185,129,0.4);
-    transform: scale(1.05);
-}
-#btn-outline.active {
-    background: rgba(16,185,129,0.25);
-    border-color: rgba(16,185,129,0.5);
-}
 #outline-panel {
     position: absolute;
     top: 0;
@@ -211,12 +182,9 @@ function toggle() {
 export function initOutline() {
     injectStyles();
 
-    // Create toggle button
-    const btn = document.createElement('button');
-    btn.id = 'btn-outline';
-    btn.title = 'Document Outline';
-    btn.innerHTML = '<i data-lucide="git-branch" style="width:20px;height:20px"></i>';
-    document.body.appendChild(btn);
+    // Reuse the toolbar button (index.html already renders it)
+    const btn = document.getElementById('btn-outline');
+    if (!btn) return;
 
     // Create panel inside preview pane
     const previewPane = elements.canvas?.parentElement;
